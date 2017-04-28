@@ -45,10 +45,12 @@
                 <div class="table-wrapper table-2-wrapper table-scroll-wrapper">
                     <table  width="750" class="table-2" cellspacing="0" cellpadding="0">
                         <colgroup >
+                            <col width="120">
                             <col width="100">
-                            <col width="200">
-                            <col width="125">
-                            <col width="125">
+                            <col width="100">
+                            <col width="100">
+                            <col width="100">
+                            <col width="100">
                             <col width="100">
                             <col width="100">
                         </colgroup>
@@ -59,12 +61,14 @@
                         </thead>
                         <tbody v-for="(item,key) in stewardFields.formItemFields.formItemArrs">
                         <tr >
-                            <td>{{item.customer}}</td>
-                            <td>{{item.address}}</td>
-                            <td>{{item.currentDot}}</td>
-                            <td>{{item.nextDot}}</td>
-                            <td>{{item.planTimes}}</td>
-                            <td>{{item.actualTimes}}</td>
+                            <td>{{item.department}}</td>
+                            <td>{{item.constuctSite}}</td>
+                            <td>{{item.dayInspect}}</td>
+                            <td>{{item.weekInspect}}</td>
+                            <td>{{item.monthInspect}}</td>
+                            <td>{{item.daySign}}</td>
+                            <td>{{item.weekSign}}</td>
+                            <td>{{item.monthSign}}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -150,12 +154,14 @@
                 ],
                 formItemFields:{
                     formItemName:[
-                        "客户姓名",
-                        "客户地址",
-                        "当前施工节点",
-                        "下一个巡检节点",
-                        "计划巡检时间",
-                        "实际巡检时间"
+                        "所属部门",
+                        "在施工地",
+                        "今日巡检（个）",
+                        "本周巡检（次个）",
+                        "本月巡检（次个）",
+                        "今日签到（个）",
+                        "本周签到（次个）",
+                         "本月签到（次个）"
                     ],
                     formItemArrs:[]
                 }
@@ -184,7 +190,7 @@
         getScheduleData(){
             const self=this;
             //请求数据
-            self.$http.get("./data.json")
+            self.$http.get("./data1.json")
                     .then((data) =>{
                         console.log(data);
                         console.log(data.body);
@@ -226,6 +232,7 @@
                 var $td=$this.find("tr:eq(0) td");
                 //获取table-2对应的tbody
                 var tbodyHeight=$(".table-2 tbody").eq(index-1).height();
+                console.log(tbodyHeight);
                 $td.height(tbodyHeight);
             });
         },
@@ -272,6 +279,7 @@
                         index=$this.index();
                 //获取table-2对应的tbody
                 var theadThWidth=$(".table-2 tbody tr td").eq(index).width();
+                console.log(theadThWidth);
                 $this.width(theadThWidth);
             });
         }
@@ -282,11 +290,11 @@
 
 <style lang="scss" scoped>
     .table-2 {
-    .thead-fixed{
-        width:750px;
-    th{
-        padding:8px 2px;
-    }
-    }
+        .thead-fixed{
+            width:820px;
+            th{
+                padding:8px 2px;
+            }
+        }
     }
 </style>

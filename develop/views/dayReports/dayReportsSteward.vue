@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="dayReportsSteward">
         <!--地区时间-->
         <section class="msg-head clearfix">
             <a class="btn-ask fl" @click="getPayAnswer"></a>
@@ -225,18 +225,19 @@
         },
         setHeight() {
             //设置固定表格的高度跟滚动表格的高度一致
-            $(".table-1 tbody").each(function () {
+            $("#dayReportsSteward .table-1 tbody").each(function () {
                 var $this=$(this),
                         index=$this.index();
                 //获取th
                 var $td=$this.find("tr:eq(0) td");
                 //获取table-2对应的tbody
-                var tbodyHeight=$(".table-2 tbody").eq(index-1).height();
+                var tbodyHeight=$("#dayReportsSteward .table-2 tbody").eq(index-1).height();
                 console.log(tbodyHeight);
                 $td.height(tbodyHeight);
             });
         },
         tableMoveLeft(){
+
             var self=this;
             //监听tabled-scroll左右滚动事件
             $(".table-scroll-wrapper").scroll(function () {

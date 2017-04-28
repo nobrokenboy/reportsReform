@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="dayReportsSchedule">
         <!--地区时间-->
         <section class="msg-head clearfix">
             <a class="btn-ask fl" @click="getPayAnswer"></a>
@@ -212,18 +212,18 @@
             getPayAnswer(){
                 alert("报表中今天的收款金额、收款数、合同数需第二天凌晨从ERP进行同步数据，因此需明天才能统计今天的收款情况。");
             },
-            turnOneToTwo(arr){
+            turnOneToTwo(arr){//一维数组转二维数组
                 return definedUtil.turnOneDimensArrToTwoDimensArr(arr,2);
             },
             setHeight() {
                 //设置固定表格的高度跟滚动表格的高度一致
-                $(".table-1 tbody").each(function () {
+                $("#dayReportsSchedule .table-1 tbody").each(function () {
                     var $this=$(this),
                             index=$this.index();
                     //获取th
                     var $td=$this.find("tr:eq(0) td");
                     //获取table-2对应的tbody
-                    var tbodyHeight=$(".table-2 tbody").eq(index-1).height();
+                    var tbodyHeight=$("#dayReportsSchedule .table-2 tbody").eq(index-1).height();
                     $td.height(tbodyHeight);
                 });
             },

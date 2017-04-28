@@ -212,7 +212,7 @@
             getPayAnswer(){
                 alert("报表中今天的收款金额、收款数、合同数需第二天凌晨从ERP进行同步数据，因此需明天才能统计今天的收款情况。");
             },
-            turnOneToTwo(arr){
+            turnOneToTwo(arr){//一维数组转二维数组
                 return definedUtil.turnOneDimensArrToTwoDimensArr(arr,2);
             },
             setHeight() {
@@ -270,6 +270,7 @@
                             index=$this.index();
                     //获取table-2对应的tbody
                     var theadThWidth=$(".table-2 tbody tr td").eq(index).width();
+                    console.log(theadThWidth);
                     $this.width(theadThWidth);
                 });
             }

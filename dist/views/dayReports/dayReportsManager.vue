@@ -5,16 +5,15 @@
             <a class="btn-ask fl" @click="getPayAnswer"></a>
             <div class="fr text-right basic-field-wrapper">
                 <a class="font-orange margin-right-5" @click="modalObj.isModalShow=true">自定义</a>
-                <span class="margin-right-5">{{scheduleFields.area}}</span>
-                <span class="margin-right-5">{{scheduleFields.status}}</span>
+                <span class="margin-right-5">{{managerFields.area}}</span>
                 <span>统计时间：</span>
-                <span>{{scheduleFields.time}}</span>
+                <span>{{managerFields.time}}</span>
             </div>
         </section>
         <!--基本信息-->
         <section class="basic-area">
             <!--第1行-->
-            <div class="basic-list clearfix" v-for="item in turnOneToTwo(scheduleFields.basicItem)">
+            <div class="basic-list clearfix" v-for="item in turnOneToTwo(managerFields.basicItem)">
                 <div v-for="value in item">
                     <span>{{value.itemName}}</span>
                     <span>{{value.itemNums}}</span>
@@ -31,13 +30,13 @@
                     <table cellspacing="0" width="100" class="table-1" cellpadding="0">
                         <thead class="forms-thead" width="100">
                         <tr>
-                            <th>工程管家</th>
+                            <th>项目经理</th>
                         </tr>
                         </thead>
-                        <tbody v-for="(item,index) in scheduleFields.formItemFields.formItemArrs" >
+                        <tbody v-for="(item,index) in managerFields.formItemFields.formItemArrs" >
                         <tr>
                             <td width="100">
-                                <a>{{item.stewardName}}</a>
+                                <a>{{item.managerName}}</a>
                             </td>
                         </tr>
                         </tbody>
@@ -46,26 +45,32 @@
                 <div class="table-wrapper table-2-wrapper table-scroll-wrapper">
                     <table  width="750" class="table-2" cellspacing="0" cellpadding="0">
                         <colgroup >
+                            <col width="120">
                             <col width="100">
-                            <col width="200">
-                            <col width="125">
-                            <col width="125">
+                            <col width="100">
+                            <col width="100">
+                            <col width="100">
+                            <col width="100">
+                            <col width="100">
                             <col width="100">
                             <col width="100">
                         </colgroup>
                         <thead class="forms-thead">
                         <tr>
-                            <th v-for="item in scheduleFields.formItemFields.formItemName">{{item}}</th>
+                            <th v-for="item in managerFields.formItemFields.formItemName">{{item}}</th>
                         </tr>
                         </thead>
-                        <tbody v-for="(item,key) in scheduleFields.formItemFields.formItemArrs">
+                        <tbody v-for="(item,key) in managerFields.formItemFields.formItemArrs">
                         <tr >
-                            <td>{{item.customer}}</td>
-                            <td>{{item.address}}</td>
-                            <td>{{item.currentDot}}</td>
-                            <td>{{item.nextDot}}</td>
-                            <td>{{item.planTimes}}</td>
-                            <td>{{item.actualTimes}}</td>
+                            <td>{{item.department}}</td>
+                            <td>{{item.constuctSite}}</td>
+                            <td>{{item.dayBroadcast}}</td>
+                            <td>{{item.weekBroadcast}}</td>
+                            <td>{{item.weekQualityRate}}</td>
+                            <td>{{item.monthBroadcast}}</td>
+                            <td>{{item.daySign}}</td>
+                            <td>{{item.weekSign}}</td>
+                            <td>{{item.monthSign}}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -124,7 +129,7 @@
             },
             isLoading:false,
             isDataNull:false,
-            scheduleFields:{
+            managerFields:{
                 status:"进度正常",
                 area:"广州片区",
                 time:new Date().toLocaleDateString().replace(/\//g,'-'),
@@ -152,12 +157,15 @@
                 ],
                 formItemFields:{
                     formItemName:[
-                        "客户姓名",
-                        "客户地址",
-                        "当前施工节点",
-                        "下一个巡检节点",
-                        "计划巡检时间",
-                        "实际巡检时间"
+                        "所属部门",
+                        "在施工地",
+                        "今日播报（个）",
+                        "本周播报（次个）",
+                        "本周合格率",
+                        "本月播报（次个）",
+                        "今日签到（个）",
+                        "本周签到（次个）",
+                        "本月签到（次个）"
                     ],
                     formItemArrs:[]
                 }
@@ -186,12 +194,12 @@
         getScheduleData(){
             const self=this;
             //请求数据
-            self.$http.get("./data.json")
+            self.$http.get("./data2.json")
                     .then((data) =>{
                         console.log(data);
                         console.log(data.body);
-                        self.scheduleFields.formItemFields.formItemArrs=data.body;
-                        console.log(self.scheduleFields.formItemFields.formItemArrs);
+                        self.managerFields.formItemFields.formItemArrs=data.body;
+                        console.log(self.managerFields.formItemFields.formItemArrs);
                         self.dealScheduleData();
                     });
 
@@ -274,6 +282,7 @@
                         index=$this.index();
                 //获取table-2对应的tbody
                 var theadThWidth=$(".table-2 tbody tr td").eq(index).width();
+                console.log(theadThWidth);
                 $this.width(theadThWidth);
             });
         }
@@ -284,11 +293,11 @@
 
 <style lang="scss" scoped>
     .table-2 {
-    .thead-fixed{
-        width:750px;
-    th{
-        padding:8px 2px;
-    }
-    }
+        .thead-fixed{
+             width:920px;
+            th{
+                padding:8px 2px;
+            }
+        }
     }
 </style>
