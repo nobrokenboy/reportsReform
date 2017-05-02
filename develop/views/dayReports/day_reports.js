@@ -2,7 +2,8 @@
  * Created by jessic on 2017/4/25.
  */
 import Vue from  'vue';
-import $ from "jquery";
+import $ from "expose?$!jquery";
+/*import  $ from "../../static/js/mylibs/jquery-vendor.js"*/
 import vueRouter from "vue-router";
 import vueResource from "vue-resource";
 Vue.use(vueRouter);
@@ -13,6 +14,8 @@ import components from '../../static/js/mylibs/components';
 import schedule from "./dayReportsSchedule.vue";
 import steward from "./dayReportsSteward.vue";
 import manager from "./dayReportsManager.vue";
+import 'bootstrap/dist/js/bootstrap.min.js';
+import 'bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js';
 /*import '../../static/css/common_m.scss';*/
 const routes = [
     {
@@ -80,6 +83,7 @@ const app = new Vue({
         }else if(path.match('/manager')){
             self.activeIndex=2;
         }
+
     },
     watch: {
         '$route' (to, from) {

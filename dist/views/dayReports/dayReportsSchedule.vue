@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="dayReportsSchedule">
         <!--地区时间-->
         <section class="msg-head clearfix">
             <a class="btn-ask fl" @click="getPayAnswer"></a>
@@ -217,13 +217,13 @@
             },
             setHeight() {
                 //设置固定表格的高度跟滚动表格的高度一致
-                $(".table-1 tbody").each(function () {
+                $("#dayReportsSchedule .table-1 tbody").each(function () {
                     var $this=$(this),
                             index=$this.index();
                     //获取th
                     var $td=$this.find("tr:eq(0) td");
                     //获取table-2对应的tbody
-                    var tbodyHeight=$(".table-2 tbody").eq(index-1).height();
+                    var tbodyHeight=$("#dayReportsSchedule .table-2 tbody").eq(index-1).height();
                     $td.height(tbodyHeight);
                 });
             },
@@ -270,7 +270,6 @@
                             index=$this.index();
                     //获取table-2对应的tbody
                     var theadThWidth=$(".table-2 tbody tr td").eq(index).width();
-                    console.log(theadThWidth);
                     $this.width(theadThWidth);
                 });
             }

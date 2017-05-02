@@ -49,6 +49,10 @@ module.exports = {
   module: {
     rules: [
       {
+        test: require.resolve("jquery"),
+        loader: "expose-loader?$!expose-loader?jQuery"
+      },
+      {
         test:/\.(scss|css|sass)/,
         loader:'style-loader!css-loader!sass-loader'//ExtractTextPlugin.extract("style-loader","css-loader","sass-loader")
       },
@@ -82,15 +86,19 @@ module.exports = {
         test:/\.png/,
         loader:'url-loader',/*把小于1KB的图片base-64内联，减少http请求*/
         query:{limit:1024}
-      }
+      },
+      {
+        test: /\.(gif|jpg|png|woff|svg|eot|ttf)\??.*$/,
+        loader: 'url-loader?limit=50000&name=[path][name].[ext]'}
     ]
   },
   resolve: {
     extensions:['.js','.vue','.json'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
-      'components':path.join(__dirname,'./develop/static/js/components'),
-      'utils':path.join(__dirname,'./develop/static/js/mylibs')
+      'utils':path.join(__dirname,'./develop/static/js/mylibs'),
+      'jquery':'jquery/src/jquery.js'//引入jquery插件需要用到
+  /*    'datepicker':path.join(__dirname,'bootstrap-datetimepicker/src')*/
     }
   },
   devServer: {
@@ -114,10 +122,11 @@ module.exports = {
       sourceMap: true
     }),
     //提供全局的变量，在模块中使用无需用require引入
-    new webpack.ProvidePlugin({
+   /* new webpack.ProvidePlugin({
       jQuery:'jquery',
-      $: 'jquery'
-    }),//直接定义第三方库
+      $: 'jquery',
+      "window.jQuery": "jquery"
+    }),//直接定义第三方库*/
 
     //将公共代码抽离出来合并为一个文件
     new CommonsChunkPlugin("common.chunk.js"),

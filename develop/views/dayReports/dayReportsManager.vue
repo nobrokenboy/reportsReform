@@ -104,7 +104,7 @@
                     </div>
                     <h4>时间</h4>
                     <div class="form-text">
-                        <input type="text" readonly placeholder="请选择时间"/>
+                        <input type="text" readonly placeholder="请选择时间" id="startDate"/>
                         <i></i>
                     </div>
                     <button type="button" class="common-btn common-all-length-btn common-active-btn margin-top-10"
@@ -119,6 +119,7 @@
 
 <script type="text/ecmascript-6">
     import definedUtil from '../../static/js/mylibs/util';
+/*    import 'datepicker/js/bootstrap-datetimepicker.js';*/
     export default {
         props: [],
         data(){
@@ -189,6 +190,16 @@
         self.getScheduleData();
         self.formTop=document.querySelector(".table-wrap").offsetTop;
         console.log(self.formTop);
+        console.log(datetimepicker);
+        $('#startDate').datetimepicker({
+            language: 'zh-CN',//显示中文
+            format: 'yyyy-mm-dd',//显示格式
+            minView: "month",//设置只显示到月份
+            initialDate: new Date(),//初始化当前日期
+            autoclose: true,//选中自动关闭
+            todayBtn: true//显示今日按钮
+        })
+
     },
     methods:{
         getScheduleData(){

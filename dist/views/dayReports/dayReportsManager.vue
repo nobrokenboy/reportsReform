@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="dayReportsManager">
         <!--地区时间-->
         <section class="msg-head clearfix">
             <a class="btn-ask fl" @click="getPayAnswer"></a>
@@ -104,7 +104,7 @@
                     </div>
                     <h4>时间</h4>
                     <div class="form-text">
-                        <input type="text" readonly placeholder="请选择时间"/>
+                        <input type="text" readonly placeholder="请选择时间" id="startDate"/>
                         <i></i>
                     </div>
                     <button type="button" class="common-btn common-all-length-btn common-active-btn margin-top-10"
@@ -119,6 +119,7 @@
 
 <script type="text/ecmascript-6">
     import definedUtil from '../../static/js/mylibs/util';
+    import fdatepicker from 'foundation-datepicker';
     export default {
         props: [],
         data(){
@@ -189,6 +190,17 @@
         self.getScheduleData();
         self.formTop=document.querySelector(".table-wrap").offsetTop;
         console.log(self.formTop);
+        console.log(fdatepicker);
+        console.log(definedUtil);
+        //日期插件
+      /*  debugger*/
+        $('#startDate').fdatepicker({
+            format: 'yyyy-mm-dd',
+            onRender: function (date) {
+                console.log("hellohahah");
+            }
+        });
+
     },
     methods:{
         getScheduleData(){
@@ -229,13 +241,13 @@
         },
         setHeight() {
             //设置固定表格的高度跟滚动表格的高度一致
-            $(".table-1 tbody").each(function () {
+            $("#dayReportsManager .table-1 tbody").each(function () {
                 var $this=$(this),
                         index=$this.index();
                 //获取th
                 var $td=$this.find("tr:eq(0) td");
                 //获取table-2对应的tbody
-                var tbodyHeight=$(".table-2 tbody").eq(index-1).height();
+                var tbodyHeight=$("#dayReportsManager .table-2 tbody").eq(index-1).height();
                 $td.height(tbodyHeight);
             });
         },
@@ -282,7 +294,6 @@
                         index=$this.index();
                 //获取table-2对应的tbody
                 var theadThWidth=$(".table-2 tbody tr td").eq(index).width();
-                console.log(theadThWidth);
                 $this.width(theadThWidth);
             });
         }
@@ -292,6 +303,7 @@
 </script>
 
 <style lang="scss" scoped>
+  /*  @import 'foundation-datepicker';*/
     .table-2 {
         .thead-fixed{
              width:920px;
