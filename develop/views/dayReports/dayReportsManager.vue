@@ -57,7 +57,15 @@
                         </colgroup>
                         <thead class="forms-thead">
                         <tr>
-                            <th v-for="item in managerFields.formItemFields.formItemName">{{item}}</th>
+                            <th v-for="item in managerFields.formItemFields.formItemName">
+                                {{item.name}}
+                                <div class="differ" v-if="item.flag==1">
+                                    (个)
+                                </div>
+                                <div class="differ" v-if="item.flag==2">
+                                    (次个)
+                                </div>
+                            </th>
                         </tr>
                         </thead>
                         <tbody v-for="(item,key) in managerFields.formItemFields.formItemArrs">
@@ -104,7 +112,8 @@
                     </div>
                     <h4>时间</h4>
                     <div class="form-text">
-                        <input type="text" readonly placeholder="请选择时间" id="startDate"/>
+                        <!--<input type="text" placeholder="请选择时间" id="startDate" readonly/>-->
+                        <calendar theme='#ff8000'></calendar>
                         <i></i>
                     </div>
                     <button type="button" class="common-btn common-all-length-btn common-active-btn margin-top-10"
@@ -114,12 +123,14 @@
                 </form>
             </div>
         </app-modal>
+
     </div>
 </template>
 
 <script type="text/ecmascript-6">
+    import calendar from 'auto-calendar/src/calendar.vue';
     import definedUtil from '../../static/js/mylibs/util';
-/*    import 'datepicker/js/bootstrap-datetimepicker.js';*/
+    import 'foundation-datepicker/js/foundation-datepicker.js';
     export default {
         props: [],
         data(){
@@ -158,15 +169,42 @@
                 ],
                 formItemFields:{
                     formItemName:[
-                        "所属部门",
-                        "在施工地",
-                        "今日播报（个）",
-                        "本周播报（次个）",
-                        "本周合格率",
-                        "本月播报（次个）",
-                        "今日签到（个）",
-                        "本周签到（次个）",
-                        "本月签到（次个）"
+                        {
+                            name:"所属部门",
+                            flag:0
+                        },
+                        {
+                            name:"在施工地",
+                            flag:0
+                        },
+                        {
+                            name:"今日播报",
+                            flag:1
+                        },
+                        {
+                            name:"本周播报",
+                            flag:2
+                        },
+                        {
+                            name:"本周合格率",
+                            flag:0
+                        },
+                        {
+                            name:"本月播报",
+                            flag:2
+                        },
+                        {
+                            name:"今日签到",
+                            flag:1
+                        },
+                        {
+                            name:"本周签到",
+                            flag:2
+                        },
+                        {
+                            name:"本月签到",
+                            flag:2
+                        }
                     ],
                     formItemArrs:[]
                 }
@@ -190,15 +228,11 @@
         self.getScheduleData();
         self.formTop=document.querySelector(".table-wrap").offsetTop;
         console.log(self.formTop);
-        console.log(datetimepicker);
-        $('#startDate').datetimepicker({
-            language: 'zh-CN',//显示中文
-            format: 'yyyy-mm-dd',//显示格式
-            minView: "month",//设置只显示到月份
-            initialDate: new Date(),//初始化当前日期
-            autoclose: true,//选中自动关闭
-            todayBtn: true//显示今日按钮
-        })
+
+        self.$nextTick(function(){
+            console.log("哈哈哈");
+
+        });
 
     },
     methods:{
@@ -296,7 +330,10 @@
                 $this.width(theadThWidth);
             });
         }
-    }
+     },
+    components:{
+         calendar
+     }
 
     }
 </script>

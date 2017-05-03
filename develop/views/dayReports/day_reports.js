@@ -2,7 +2,8 @@
  * Created by jessic on 2017/4/25.
  */
 import Vue from  'vue';
-import $ from "expose?$!jquery";
+/*import $ from "expose?$!jquery";*/
+import $ from "jquery";
 /*import  $ from "../../static/js/mylibs/jquery-vendor.js"*/
 import vueRouter from "vue-router";
 import vueResource from "vue-resource";
@@ -14,9 +15,10 @@ import components from '../../static/js/mylibs/components';
 import schedule from "./dayReportsSchedule.vue";
 import steward from "./dayReportsSteward.vue";
 import manager from "./dayReportsManager.vue";
-import 'bootstrap/dist/js/bootstrap.min.js';
-import 'bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js';
 /*import '../../static/css/common_m.scss';*/
+import 'font-awesome/css/font-awesome.min.css';
+import 'foundation-datepicker/css/foundation-datepicker.min.css';
+import 'foundation-datepicker/js/foundation-datepicker.js';
 const routes = [
     {
         path: '/',

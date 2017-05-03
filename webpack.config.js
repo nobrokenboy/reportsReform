@@ -37,7 +37,7 @@ module.exports = {
   },*/
   entry:{
     "dayReports/day_reports":"./develop/views/dayReports/day_reports.js",
-    "monthReports/month_reports.js":"./develop/views/monthReports/month_reports.js",
+    "monthReports/month_reports":"./develop/views/monthReports/month_reports.js",
     "stewardDetailReport/detail_report_steward":"./develop/views/stewardDetailReport/detail_report_steward.js",
     "managerDetailReport/detail_report_manager":"./develop/views/managerDetailReport/detail_report_manager.js"
   },
@@ -49,8 +49,11 @@ module.exports = {
   module: {
     rules: [
       {
-        test: require.resolve("jquery"),
-        loader: "expose-loader?$!expose-loader?jQuery"
+        test: require.resolve('jquery'),
+        use: [{
+          loader: 'expose-loader',
+          options: '$'
+        }]
       },
       {
         test:/\.(scss|css|sass)/,
@@ -64,8 +67,8 @@ module.exports = {
             // Since sass-loader (weirdly) has SCSS as its default parse mode, we map
             // the "scss" and "sass" values for the lang attribute to the right configs here.
             // other preprocessors should work out of the box, no loader config like this necessary.
-            'scss': 'vue-style-loader!css-loader!sass-loader',
-            'sass': 'vue-style-loader!css-loader!sass-loader?indentedSyntax'
+            'scss': 'vue-style-loader!css-loader!sass-loader!stylus-loader',
+            'sass': 'vue-style-loader!css-loader!sass-loader!stylus-loader?indentedSyntax'
           }
           // other vue-loader options go here
         }
@@ -88,8 +91,9 @@ module.exports = {
         query:{limit:1024}
       },
       {
-        test: /\.(gif|jpg|png|woff|svg|eot|ttf)\??.*$/,
-        loader: 'url-loader?limit=50000&name=[path][name].[ext]'}
+        test: /\.(eot|svg|ttf|woff|woff2)(\?\S*)?$/,
+        loader: 'file-loader'
+      }
     ]
   },
   resolve: {
@@ -98,9 +102,13 @@ module.exports = {
       'vue$': 'vue/dist/vue.esm.js',
       'utils':path.join(__dirname,'./develop/static/js/mylibs'),
       'jquery':'jquery/src/jquery.js'//引入jquery插件需要用到
+    /*  'jquery':path.join(__dirname, 'node_modules/jquery/dist/jquery')*/
   /*    'datepicker':path.join(__dirname,'bootstrap-datetimepicker/src')*/
     }
   },
+ /* externals: {
+    jquery: 'jQuery'
+  },*/
   devServer: {
     historyApiFallback: true,
     noInfo: true,
@@ -122,7 +130,7 @@ module.exports = {
       sourceMap: true
     }),
     //提供全局的变量，在模块中使用无需用require引入
-   /* new webpack.ProvidePlugin({
+   new webpack.ProvidePlugin({
       jQuery:'jquery',
       $: 'jquery',
       "window.jQuery": "jquery"

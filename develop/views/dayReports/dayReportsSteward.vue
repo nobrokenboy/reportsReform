@@ -56,7 +56,15 @@
                         </colgroup>
                         <thead class="forms-thead">
                         <tr>
-                            <th v-for="item in stewardFields.formItemFields.formItemName">{{item}}</th>
+                            <th v-for="item in stewardFields.formItemFields.formItemName">
+                                {{item.name}}
+                                <div class="differ" v-if="item.flag==1">
+                                    (个)
+                                </div>
+                                <div class="differ" v-if="item.flag==2">
+                                    (次个)
+                                </div>
+                            </th>
                         </tr>
                         </thead>
                         <tbody v-for="(item,key) in stewardFields.formItemFields.formItemArrs">
@@ -154,14 +162,38 @@
                 ],
                 formItemFields:{
                     formItemName:[
-                        "所属部门",
-                        "在施工地",
-                        "今日巡检（个）",
-                        "本周巡检（次个）",
-                        "本月巡检（次个）",
-                        "今日签到（个）",
-                        "本周签到（次个）",
-                         "本月签到（次个）"
+                        {
+                            name:"所属部门",
+                            flag:0
+                        },
+                        {
+                            name:"在施工地",
+                            flag:0
+                        },
+                        {
+                            name:"今日巡检",
+                            flag:1
+                        },
+                        {
+                            name:"本周巡检",
+                            flag:2
+                        },
+                        {
+                            name:"本月巡检",
+                            flag:2
+                        },
+                        {
+                            name:"今日签到",
+                            flag:1
+                        },
+                        {
+                            name:"本周签到",
+                            flag:2
+                        },
+                        {
+                            name:"本月签到",
+                            flag:2
+                        }
                     ],
                     formItemArrs:[]
                 }

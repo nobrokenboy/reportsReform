@@ -83,7 +83,7 @@ export default {
 		if(iSum%11!=1) return "你输入的身份证号非法";
 		return true;
 	},
-	turnOneDimensArrToTwoDimensArr(arr,column){
+	turnOneDimensArrToTwoDimensArr(arr,column){//等列二维
 		var twoDimensArr=[];
 		//获取数组长度
 		var arrlength=arr.length;
@@ -124,6 +124,15 @@ export default {
 		var cval=this.getCookie(name);
 		if(cval!=null)
 			document.cookie= name + "="+cval+";expires="+exp.toGMTString();
+	},
+	turnOneDimensArrToTwoDimensArrSpe(arr){//转化为2,3,3的数组
+		var twoDimensArr=[];
+		//获取数组长度
+		var arrlength=arr.length;
+		twoDimensArr.push(arr.slice(0,2));
+		twoDimensArr.push(arr.slice(2,5));
+		twoDimensArr.push(arr.slice(5,8));
+		return twoDimensArr;
 	}
 
 

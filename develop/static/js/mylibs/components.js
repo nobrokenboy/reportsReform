@@ -80,9 +80,10 @@ Vue.component("comp-verifycode",{
 });
 /*弹框*/
 Vue.component("app-modal",{
-    props:["isShowModal","transitionType"],
+    props:["isShowModal","transitionType","shadeZIndex"],
     template:'<transition :name="transitionType" >\
-        <div class="app-modal animated" id="appModal" v-if="isShowModal" v-on:click.self="setClose">\
+        <div class="app-modal animated" id="appModal" v-if="isShowModal"\
+         v-bind:style="{zIndex:shadeZIndex||10}" v-on:click.self="setClose">\
             <div class="app-modal-wrapper">\
                 <slot name="close"></slot>\
                 <h2><slot name="title"></slot></h2>\
@@ -131,4 +132,12 @@ Vue.component('header-nav',{
         }
     }
 
+});
+
+Vue.component('datetime-picker',{
+    prop:[],
+    template:``,
+    methods:{
+
+    }
 });

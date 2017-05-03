@@ -104,7 +104,8 @@
                     </div>
                     <h4>时间</h4>
                     <div class="form-text">
-                        <input type="text" readonly placeholder="请选择时间" id="startDate"/>
+                        <!--<input type="text" placeholder="请选择时间" id="startDate" readonly/>-->
+                        <calendar theme='#ff8000'></calendar>
                         <i></i>
                     </div>
                     <button type="button" class="common-btn common-all-length-btn common-active-btn margin-top-10"
@@ -114,12 +115,14 @@
                 </form>
             </div>
         </app-modal>
+
     </div>
 </template>
 
 <script type="text/ecmascript-6">
+    import calendar from 'auto-calendar/src/calendar.vue';
     import definedUtil from '../../static/js/mylibs/util';
-    import fdatepicker from 'foundation-datepicker';
+    import 'foundation-datepicker/js/foundation-datepicker.js';
     export default {
         props: [],
         data(){
@@ -190,15 +193,10 @@
         self.getScheduleData();
         self.formTop=document.querySelector(".table-wrap").offsetTop;
         console.log(self.formTop);
-        console.log(fdatepicker);
-        console.log(definedUtil);
-        //日期插件
-      /*  debugger*/
-        $('#startDate').fdatepicker({
-            format: 'yyyy-mm-dd',
-            onRender: function (date) {
-                console.log("hellohahah");
-            }
+
+        self.$nextTick(function(){
+            console.log("哈哈哈");
+
         });
 
     },
@@ -297,13 +295,15 @@
                 $this.width(theadThWidth);
             });
         }
-    }
+     },
+    components:{
+         calendar
+     }
 
     }
 </script>
 
 <style lang="scss" scoped>
-  /*  @import 'foundation-datepicker';*/
     .table-2 {
         .thead-fixed{
              width:920px;

@@ -10,15 +10,40 @@
     <meta name="x5-fullscreen" content="true">
     <meta name="full-screen" content="yes">
     <title>注册</title>
-    <link rel="stylesheet" href="/reportForms/dist/static/css/base.min.css">
+    <link rel="stylesheet" href="../../static/css/base.min.css">
 </head>
 <body>
 
 <style></style>
-<div>
-    <h1>月报表</h1>
-</div>
+<div class="form-reports" id="monthReports" v-if="isShow" v-cloak>
+    <section>
+        
+        <header-nav>
+            <span slot="title" class="f16">工程管理月报表</span>
+        </header-nav>
+        
+        <section>
+            <nav class="select-type-nav clearfix">
+                <div class="fl type-wrapper">
+                    <ul class="type-select">
+                        <li v-for="(item,key) in tabItems" @click="activeIndex=key" value="key">
+                            <router-link :to="item.routerName" :class="{'active':activeIndex==key}">{{item.text}}</router-link>
+                        </li>
+                    </ul>
+                    <div class="slider-active" v-tab-slider></div>
+                </div>
+                <div class="fr download-wrapper">
+                    <a class="font-orange block text-right padding-right-10" @click="download">下载</a>
+                </div>
+            </nav>
+        </section>
+        
+        <transition>
+            <router-view></router-view>
+        </transition>
+    </section>
 
+</div>
 
 <script src="../common.chunk.js.build.js"></script>
 <script src="month_reports.build.js"></script>
