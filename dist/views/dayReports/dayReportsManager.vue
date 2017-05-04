@@ -57,7 +57,15 @@
                         </colgroup>
                         <thead class="forms-thead">
                         <tr>
-                            <th v-for="item in managerFields.formItemFields.formItemName">{{item}}</th>
+                            <th v-for="item in managerFields.formItemFields.formItemName">
+                                {{item.name}}
+                                <div class="differ" v-if="item.flag==1">
+                                    (个)
+                                </div>
+                                <div class="differ" v-if="item.flag==2">
+                                    (次个)
+                                </div>
+                            </th>
                         </tr>
                         </thead>
                         <tbody v-for="(item,key) in managerFields.formItemFields.formItemArrs">
@@ -123,6 +131,7 @@
     import calendar from 'auto-calendar/src/calendar.vue';
     import definedUtil from '../../static/js/mylibs/util';
     import 'foundation-datepicker/js/foundation-datepicker.js';
+    import datetimePicker from "../../static/js/component/datetimePicker.vue";
     export default {
         props: [],
         data(){
@@ -161,15 +170,42 @@
                 ],
                 formItemFields:{
                     formItemName:[
-                        "所属部门",
-                        "在施工地",
-                        "今日播报（个）",
-                        "本周播报（次个）",
-                        "本周合格率",
-                        "本月播报（次个）",
-                        "今日签到（个）",
-                        "本周签到（次个）",
-                        "本月签到（次个）"
+                        {
+                            name:"所属部门",
+                            flag:0
+                        },
+                        {
+                            name:"在施工地",
+                            flag:0
+                        },
+                        {
+                            name:"今日播报",
+                            flag:1
+                        },
+                        {
+                            name:"本周播报",
+                            flag:2
+                        },
+                        {
+                            name:"本周合格率",
+                            flag:0
+                        },
+                        {
+                            name:"本月播报",
+                            flag:2
+                        },
+                        {
+                            name:"今日签到",
+                            flag:1
+                        },
+                        {
+                            name:"本周签到",
+                            flag:2
+                        },
+                        {
+                            name:"本月签到",
+                            flag:2
+                        }
                     ],
                     formItemArrs:[]
                 }
@@ -297,7 +333,7 @@
         }
      },
     components:{
-         calendar
+        datetimePicker
      }
 
     }

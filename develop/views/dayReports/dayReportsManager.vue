@@ -131,6 +131,7 @@
     import calendar from 'auto-calendar/src/calendar.vue';
     import definedUtil from '../../static/js/mylibs/util';
     import 'foundation-datepicker/js/foundation-datepicker.js';
+    import datetimePicker from "../../static/js/component/datetimePicker.vue";
     export default {
         props: [],
         data(){
@@ -332,7 +333,7 @@
         }
      },
     components:{
-         calendar
+        datetimePicker
      }
 
     }

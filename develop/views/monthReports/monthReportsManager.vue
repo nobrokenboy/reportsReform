@@ -122,14 +122,14 @@
                     <div class="clearfix special-form-select">
                         <div class="fl special-form-select-block">
                             <select name="year" >
-                                <option value="0">所有</option>
+                                <option :value="item" v-for="item in yearList" :selected="item==curYear" >{{item+"年"}}</option>
                             </select>
                             <i></i>
                         </div>
                         <span class="fl special-link-symbol">-</span>
                         <div class="fl special-form-select-block">
                             <select name="month" >
-                                <option value="0">所有</option>
+                                <option :value="item" v-for="item in monthList" :selected="item==curMonth">{{item+"月"}}</option>
                             </select>
                             <i></i>
                         </div>
@@ -152,7 +152,10 @@
     export default {
         props: [],
         data(){
+            let curDate=new Date();
             return {
+                curYear:curDate.getFullYear(),
+                curMonth:curDate.getMonth(),
                 modalObj:{
                     isModalShow:false,
                     transitionType:"slide-fade"
@@ -254,6 +257,18 @@
             modalFlag(){
                 const self=this;
                 return self.modalObj.isModalShow;
+            },
+            yearList(){
+                //设置起始年份为2015年
+                var diffYear=this.curYear-2015+1;
+                return Array.from({length:diffYear},(value,index) =>{
+                    return this.curYear-index;
+                });
+            },
+            monthList(){
+                return Array.from({length:12},(value,index) =>{
+                    return index+1;
+                });
             }
         },
         mounted(){

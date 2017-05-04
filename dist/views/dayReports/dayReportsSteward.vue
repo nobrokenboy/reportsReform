@@ -56,7 +56,15 @@
                         </colgroup>
                         <thead class="forms-thead">
                         <tr>
-                            <th v-for="item in stewardFields.formItemFields.formItemName">{{item}}</th>
+                            <th v-for="item in stewardFields.formItemFields.formItemName">
+                                {{item.name}}
+                                <div class="differ" v-if="item.flag==1">
+                                    (个)
+                                </div>
+                                <div class="differ" v-if="item.flag==2">
+                                    (次个)
+                                </div>
+                            </th>
                         </tr>
                         </thead>
                         <tbody v-for="(item,key) in stewardFields.formItemFields.formItemArrs">
@@ -102,7 +110,7 @@
                     </div>
                     <h4>时间</h4>
                     <div class="form-text">
-                        <input type="text" readonly placeholder="请选择时间"/>
+                        <input type="text" readonly placeholder="请选择时间" @click="datetimePickerObj.isShow=true"/>
                         <i></i>
                     </div>
                     <button type="button" class="common-btn common-all-length-btn common-active-btn margin-top-10"
@@ -112,17 +120,26 @@
                 </form>
             </div>
         </app-modal>
+        <!--日期-->
+        <datetime-picker ref="datetimeObj" :isShowSelector="datetimePickerObj.isShow" :transition-type="datetimePickerObj.transitionType">
+
+        </datetime-picker>
     </div>
 </template>
 
 <script type="text/ecmascript-6">
     import definedUtil from '../../static/js/mylibs/util';
+    import DatetimePicker from "../../static/js/component/datetimePicker.vue";
     export default {
         props: [],
         data(){
         return {
             modalObj:{
                 isModalShow:false,
+                transitionType:"slide-fade"
+            },
+            datetimePickerObj:{
+                isShow:false,
                 transitionType:"slide-fade"
             },
             isLoading:false,
@@ -154,14 +171,38 @@
                 ],
                 formItemFields:{
                     formItemName:[
-                        "所属部门",
-                        "在施工地",
-                        "今日巡检（个）",
-                        "本周巡检（次个）",
-                        "本月巡检（次个）",
-                        "今日签到（个）",
-                        "本周签到（次个）",
-                         "本月签到（次个）"
+                        {
+                            name:"所属部门",
+                            flag:0
+                        },
+                        {
+                            name:"在施工地",
+                            flag:0
+                        },
+                        {
+                            name:"今日巡检",
+                            flag:1
+                        },
+                        {
+                            name:"本周巡检",
+                            flag:2
+                        },
+                        {
+                            name:"本月巡检",
+                            flag:2
+                        },
+                        {
+                            name:"今日签到",
+                            flag:1
+                        },
+                        {
+                            name:"本周签到",
+                            flag:2
+                        },
+                        {
+                            name:"本月签到",
+                            flag:2
+                        }
                     ],
                     formItemArrs:[]
                 }
@@ -283,7 +324,10 @@
                 $this.width(theadThWidth);
             });
         }
-    }
+     },
+    components:{
+         DatetimePicker
+     }
 
     }
 </script>

@@ -61,7 +61,15 @@
                         </colgroup>
                         <thead class="forms-thead">
                         <tr>
-                            <th v-for="item in managerFields.formItemFields.formItemName">{{item}}</th>
+                            <th v-for="item in managerFields.formItemFields.formItemName">
+                                {{item.name}}
+                                <div class="differ" v-if="item.flag==1">
+                                    (个)
+                                </div>
+                                <div class="differ" v-if="item.flag==2">
+                                    (次个)
+                                </div>
+                            </th>
                         </tr>
                         </thead>
                         <tbody v-for="(item,key) in managerFields.formItemFields.formItemArrs">
@@ -114,14 +122,14 @@
                     <div class="clearfix special-form-select">
                         <div class="fl special-form-select-block">
                             <select name="year" >
-                                <option value="0">所有</option>
+                                <option :value="item" v-for="item in yearList" :selected="item==curYear" >{{item+"年"}}</option>
                             </select>
                             <i></i>
                         </div>
                         <span class="fl special-link-symbol">-</span>
                         <div class="fl special-form-select-block">
                             <select name="month" >
-                                <option value="0">所有</option>
+                                <option :value="item" v-for="item in monthList" :selected="item==curMonth">{{item+"月"}}</option>
                             </select>
                             <i></i>
                         </div>
@@ -144,7 +152,10 @@
     export default {
         props: [],
         data(){
+            let curDate=new Date();
             return {
+                curYear:curDate.getFullYear(),
+                curMonth:curDate.getMonth(),
                 modalObj:{
                     isModalShow:false,
                     transitionType:"slide-fade"
@@ -179,19 +190,58 @@
                     ],
                     formItemFields:{
                         formItemName:[
-                            "所属部门",
-                            "月在施工地",
-                            "月达标数",
-                            "月不达标数",
-                            "月签到（次个）",
-                            "第一周在施工地",
-                            "第一周达标数",
-                            "第二周在施工地",
-                            "第二周达标数",
-                            "第三周在施工地",
-                            "第三周达标数",
-                            "第四周在施工地",
-                            "第四周达标数"
+                            {
+                                name:"所属部门",
+                                flag:0
+                            },
+                            {
+                                name:"月在施工地",
+                                flag:0
+                            },
+                            {
+                                name:"月达标数",
+                                flag:0
+                            },
+                            {
+                                name:"月不达标数",
+                                flag:0
+                            },
+                            {
+                                name:"月签到",
+                                flag:2
+                            },
+                            {
+                                name:"第一周在施工地",
+                                flag:0
+                            },
+                            {
+                                name:"第一周达标数",
+                                flag:0
+                            },
+                            {
+                                name:"第二周在施工地",
+                                flag:0
+                            },
+                            {
+                                name:"第二周达标数",
+                                flag:0
+                            },
+                            {
+                                name:"第三周在施工地",
+                                flag:0
+                            },
+                            {
+                                name:"第三周达标数",
+                                flag:0
+                            },
+                            {
+                                name:"第四周在施工地",
+                                flag:0
+                            },
+                            {
+                                name:"第四周达标数",
+                                flag:0
+                            }
                         ],
                         formItemArrs:[]
                     }
@@ -207,6 +257,18 @@
             modalFlag(){
                 const self=this;
                 return self.modalObj.isModalShow;
+            },
+            yearList(){
+                //设置起始年份为2015年
+                var diffYear=this.curYear-2015+1;
+                return Array.from({length:diffYear},(value,index) =>{
+                    return this.curYear-index;
+                });
+            },
+            monthList(){
+                return Array.from({length:12},(value,index) =>{
+                    return index+1;
+                });
             }
         },
         mounted(){

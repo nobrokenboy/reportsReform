@@ -1,17 +1,17 @@
 <template>
-    <div id="dayReportSteward">
+    <div id="monthReportManager">
         <!--地区时间-->
         <section class="msg-head clearfix">
             <a class="btn-ask fl" @click="getPayAnswer"></a>
             <div class="fr text-right basic-field-wrapper">
                 <span>统计时间：</span>
-                <span>{{monthStewardFields.time}}</span>
+                <span>{{monthManagerFields.time}}</span>
             </div>
         </section>
         <!--基本信息-->
         <section class="basic-area">
             <!--第1行-->
-            <div class="basic-list clearfix" v-for="item in turnOneToTwo(monthStewardFields.basicItem)">
+            <div class="basic-list clearfix" v-for="item in turnOneToTwo(monthManagerFields.basicItem)">
                 <div v-for="value in item">
                     <span>{{value.itemName}}</span>
                     <span>{{value.itemNums}}</span>
@@ -28,10 +28,10 @@
                     <table cellspacing="0" width="100" class="table-1" cellpadding="0">
                         <thead class="forms-thead" width="100">
                         <tr>
-                            <th>工程管家</th>
+                            <th>客户姓名</th>
                         </tr>
                         </thead>
-                        <tbody v-for="(item,index) in monthStewardFields.formItemFields.formItemArrs" >
+                        <tbody v-for="(item,index) in monthManagerFields.formItemFields.formItemArrs" >
                         <tr>
                             <td width="100">
                                 <a>{{item.customerName}}</a>
@@ -41,9 +41,10 @@
                     </table>
                 </div>
                 <div class="table-wrapper table-2-wrapper table-scroll-wrapper">
-                    <table  width="720" class="table-2" cellspacing="0" cellpadding="0">
+                    <table  width="820" class="table-2" cellspacing="0" cellpadding="0">
                         <colgroup >
                             <col width="120">
+                            <col width="100">
                             <col width="100">
                             <col width="100">
                             <col width="100">
@@ -53,18 +54,27 @@
                         </colgroup>
                         <thead class="forms-thead">
                         <tr>
-                            <th v-for="item in monthStewardFields.formItemFields.formItemName">{{item}}</th>
+                            <th v-for="item in monthManagerFields.formItemFields.formItemName">
+                                {{item.name}}
+                                <div class="differ" v-if="item.flag==1">
+                                    (个)
+                                </div>
+                                <div class="differ" v-if="item.flag==2">
+                                    (次个)
+                                </div>
+                            </th>
                         </tr>
                         </thead>
-                        <tbody v-for="(item,key) in monthStewardFields.formItemFields.formItemArrs">
+                        <tbody v-for="(item,key) in monthManagerFields.formItemFields.formItemArrs">
                         <tr >
                             <td>{{item.customerAddress}}</td>
-                            <td>{{item.currentDot}}</td>
-                            <td>{{item.nextDot}}</td>
-                            <td>{{item.planInspectTime}}</td>
-                            <td>{{item.actualInspectTime}}</td>
-                            <td>{{item.signInTimes}}</td>
-                            <td>{{item.inspectTimes}}</td>
+                            <td>{{item.actualTimes}}</td>
+                            <td>{{item.firstWeekBroadcast}}</td>
+                            <td>{{item.secondWeekBroadcast}}</td>
+                            <td>{{item.thirdWeekBroadcast}}</td>
+                            <td>{{item.forthWeekBroadcast}}</td>
+                            <td>{{item.monthBroadcast}}</td>
+                            <td>{{item.monthSignin}}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -93,7 +103,7 @@
         return {
             isLoading:false,
             isDataNull:false,
-            monthStewardFields:{
+            monthManagerFields:{
                 time:new Date().toLocaleDateString().replace(/\//g,'-'),
                 basicItem:[
                     {
@@ -105,39 +115,48 @@
                         itemNums:20
                     },
                     {
-                        itemName:"今日巡检数",
+                        itemName:"播报总数",
                         itemNums:50
                     },
                     {
-                        itemName:"本周巡检数",
+                        itemName:"签到总数",
                         itemNums:50
-                    },
-                    {
-                        itemName:"本月巡检数",
-                        itemNums:50
-                    },
-                    {
-                        itemName:"今日签到数",
-                        itemNums:20
-                    },
-                    {
-                        itemName:"本周签到数",
-                        itemNums:20
-                    },
-                    {
-                        itemName:"本月签到数",
-                        itemNums:20
                     }
                 ],
                 formItemFields:{
                     formItemName:[
-                        "客户地址",
-                        "当前施工节点",
-                        "下一个巡检节点",
-                        "计划巡检时间",
-                        "实际巡检时间",
-                        "累计签到次数",
-                        "累计巡检次数"
+                        {
+                            name:"客户地址",
+                            flag:0
+                        },
+                        {
+                            name:"实际开工日期",
+                            flag:0
+                        },
+                        {
+                            name:"第一周播报次数",
+                            flag:0
+                        },
+                        {
+                            name:"第二周播报次数",
+                            flag:0
+                        },
+                        {
+                            name:"第三周播报次数",
+                            flag:0
+                        },
+                        {
+                            name:"第四周播报次数",
+                            flag:0
+                        },
+                        {
+                            name:"月播报总数",
+                            flag:0
+                        },
+                        {
+                            name:"月签到总数",
+                            flag:0
+                        }
                     ],
                     formItemArrs:[]
                 }
@@ -160,25 +179,20 @@
         getScheduleData(){
             const self=this;
             //请求数据
-            self.$http.get("./data1.json")
+            self.$http.get("./data2.json")
                     .then((data) =>{
                         console.log(data);
                         console.log(data.body);
-                        self.monthStewardFields.formItemFields.formItemArrs=data.body;
-                        console.log(self.monthStewardFields.formItemFields.formItemArrs);
+                        self.monthManagerFields.formItemFields.formItemArrs=data.body;
+                        console.log(self.monthManagerFields.formItemFields.formItemArrs);
                         self.dealScheduleData();
                     });
 
 
         },
-        defindRequest(){
-            console.log("自定义呢");
-            const self=this;
-            self.modalObj.isModalShow=false;
-        },
         downloadRequest(){
             const self=this;
-            console.log("工程管家详细");
+            console.log("项目经理月度详细");
         },
         dealScheduleData(){
             const self=this;
@@ -195,13 +209,13 @@
         },
         setHeight() {
             //设置固定表格的高度跟滚动表格的高度一致
-            $("#dayReportSteward .table-1 tbody").each(function () {
+            $("#monthReportManager .table-1 tbody").each(function () {
                 var $this=$(this),
                         index=$this.index();
                 //获取th
                 var $td=$this.find("tr:eq(0) td");
                 //获取table-2对应的tbody
-                var tbodyHeight=$("#dayReportSteward .table-2 tbody").eq(index-1).height();
+                var tbodyHeight=$("#monthReportManager .table-2 tbody").eq(index-1).height();
                 console.log(tbodyHeight);
                 $td.height(tbodyHeight);
             });
@@ -260,11 +274,11 @@
 
 <style lang="scss" scoped>
     .table-2 {
-    .thead-fixed{
-        width:720px;
-    th{
-        padding:8px 2px;
-    }
-    }
+        .thead-fixed{
+            width:820px;
+            th{
+                padding:8px 2px;
+            }
+        }
     }
 </style>

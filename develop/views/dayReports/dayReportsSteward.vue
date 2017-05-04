@@ -110,7 +110,7 @@
                     </div>
                     <h4>时间</h4>
                     <div class="form-text">
-                        <input type="text" readonly placeholder="请选择时间"/>
+                        <input type="text" readonly placeholder="请选择时间" @click="datetimePickerObj.isShow=true"/>
                         <i></i>
                     </div>
                     <button type="button" class="common-btn common-all-length-btn common-active-btn margin-top-10"
@@ -120,17 +120,26 @@
                 </form>
             </div>
         </app-modal>
+        <!--日期-->
+        <datetime-picker ref="datetimeObj" :isShowSelector="datetimePickerObj.isShow" :transition-type="datetimePickerObj.transitionType">
+
+        </datetime-picker>
     </div>
 </template>
 
 <script type="text/ecmascript-6">
     import definedUtil from '../../static/js/mylibs/util';
+    import DatetimePicker from "../../static/js/component/datetimePicker.vue";
     export default {
         props: [],
         data(){
         return {
             modalObj:{
                 isModalShow:false,
+                transitionType:"slide-fade"
+            },
+            datetimePickerObj:{
+                isShow:false,
                 transitionType:"slide-fade"
             },
             isLoading:false,
@@ -315,7 +324,10 @@
                 $this.width(theadThWidth);
             });
         }
-    }
+     },
+    components:{
+         DatetimePicker
+     }
 
     }
 </script>

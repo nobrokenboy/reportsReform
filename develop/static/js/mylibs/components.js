@@ -133,11 +133,3 @@ Vue.component('header-nav',{
     }
 
 });
-
-Vue.component('datetime-picker',{
-    prop:[],
-    template:``,
-    methods:{
-
-    }
-});

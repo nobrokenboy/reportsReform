@@ -1,18 +1,22 @@
 <template>
-    <div id="dayReportSteward">
+    <div id="dayReportManager">
         <!--地区时间-->
         <section class="msg-head clearfix">
             <a class="btn-ask fl" @click="getPayAnswer"></a>
             <div class="fr text-right basic-field-wrapper">
                 <span>统计时间：</span>
-                <span>{{monthStewardFields.time}}</span>
+                <span>{{dayManagerFields.time}}</span>
             </div>
         </section>
         <!--基本信息-->
         <section class="basic-area">
             <!--第1行-->
-            <div class="basic-list clearfix" v-for="item in turnOneToTwo(monthStewardFields.basicItem)">
-                <div v-for="value in item">
+            <div class="basic-list clearfix" v-for="item in turnOneToTwo(dayManagerFields.basicItem)">
+                <div v-for="value in item" v-if="item.length==2" >
+                    <span>{{value.itemName}}</span>
+                    <span>{{value.itemNums}}</span>
+                </div>
+                <div v-for="value in item" v-if="item.length==3" style="width:32.3%;">
                     <span>{{value.itemName}}</span>
                     <span>{{value.itemNums}}</span>
                 </div>
@@ -28,10 +32,10 @@
                     <table cellspacing="0" width="100" class="table-1" cellpadding="0">
                         <thead class="forms-thead" width="100">
                         <tr>
-                            <th>工程管家</th>
+                            <th>客户姓名</th>
                         </tr>
                         </thead>
-                        <tbody v-for="(item,index) in monthStewardFields.formItemFields.formItemArrs" >
+                        <tbody v-for="(item,index) in dayManagerFields.formItemFields.formItemArrs" >
                         <tr>
                             <td width="100">
                                 <a>{{item.customerName}}</a>
@@ -41,10 +45,9 @@
                     </table>
                 </div>
                 <div class="table-wrapper table-2-wrapper table-scroll-wrapper">
-                    <table  width="720" class="table-2" cellspacing="0" cellpadding="0">
+                    <table  width="620" class="table-2" cellspacing="0" cellpadding="0">
                         <colgroup >
                             <col width="120">
-                            <col width="100">
                             <col width="100">
                             <col width="100">
                             <col width="100">
@@ -53,18 +56,25 @@
                         </colgroup>
                         <thead class="forms-thead">
                         <tr>
-                            <th v-for="item in monthStewardFields.formItemFields.formItemName">{{item}}</th>
+                            <th v-for="item in dayManagerFields.formItemFields.formItemName">
+                                {{item.name}}
+                                <div class="differ" v-if="item.flag==1">
+                                    (个)
+                                </div>
+                                <div class="differ" v-if="item.flag==2">
+                                    (次个)
+                                </div>
+                            </th>
                         </tr>
                         </thead>
-                        <tbody v-for="(item,key) in monthStewardFields.formItemFields.formItemArrs">
+                        <tbody v-for="(item,key) in dayManagerFields.formItemFields.formItemArrs">
                         <tr >
                             <td>{{item.customerAddress}}</td>
                             <td>{{item.currentDot}}</td>
-                            <td>{{item.nextDot}}</td>
-                            <td>{{item.planInspectTime}}</td>
-                            <td>{{item.actualInspectTime}}</td>
-                            <td>{{item.signInTimes}}</td>
-                            <td>{{item.inspectTimes}}</td>
+                            <td>{{item.planFinishedTime}}</td>
+                            <td>{{item.todayBroadcast}}</td>
+                            <td>{{item.weekBroadcast}}</td>
+                            <td>{{item.weekSignIn}}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -93,7 +103,7 @@
         return {
             isLoading:false,
             isDataNull:false,
-            monthStewardFields:{
+            dayManagerFields:{
                 time:new Date().toLocaleDateString().replace(/\//g,'-'),
                 basicItem:[
                     {
@@ -105,15 +115,15 @@
                         itemNums:20
                     },
                     {
-                        itemName:"今日巡检数",
+                        itemName:"今日播报数",
                         itemNums:50
                     },
                     {
-                        itemName:"本周巡检数",
+                        itemName:"本周播报数",
                         itemNums:50
                     },
                     {
-                        itemName:"本月巡检数",
+                        itemName:"本月播报数",
                         itemNums:50
                     },
                     {
@@ -131,13 +141,30 @@
                 ],
                 formItemFields:{
                     formItemName:[
-                        "客户地址",
-                        "当前施工节点",
-                        "下一个巡检节点",
-                        "计划巡检时间",
-                        "实际巡检时间",
-                        "累计签到次数",
-                        "累计巡检次数"
+                        {
+                            name:"客户地址",
+                            flag:0
+                        },
+                        {
+                            name:"当前施工节点",
+                            flag:0
+                        },
+                        {
+                            name:"计划完工时间",
+                            flag:0
+                        },
+                        {
+                            name:"今日播报",
+                            flag:0
+                        },
+                        {
+                            name:"本周播报次数",
+                            flag:0
+                        },
+                        {
+                            name:"本周签到次数",
+                            flag:0
+                        }
                     ],
                     formItemArrs:[]
                 }
@@ -164,21 +191,16 @@
                     .then((data) =>{
                         console.log(data);
                         console.log(data.body);
-                        self.monthStewardFields.formItemFields.formItemArrs=data.body;
-                        console.log(self.monthStewardFields.formItemFields.formItemArrs);
+                        self.dayManagerFields.formItemFields.formItemArrs=data.body;
+                        console.log(self.dayManagerFields.formItemFields.formItemArrs);
                         self.dealScheduleData();
                     });
 
 
         },
-        defindRequest(){
-            console.log("自定义呢");
-            const self=this;
-            self.modalObj.isModalShow=false;
-        },
         downloadRequest(){
             const self=this;
-            console.log("工程管家详细");
+            console.log("项目经理今天详细");
         },
         dealScheduleData(){
             const self=this;
@@ -191,17 +213,17 @@
             alert("报表中今天的收款金额、收款数、合同数需第二天凌晨从ERP进行同步数据，因此需明天才能统计今天的收款情况。");
         },
         turnOneToTwo(arr){
-            return definedUtil.turnOneDimensArrToTwoDimensArr(arr,2);
+            return definedUtil.turnOneDimensArrToTwoDimensArrSpe(arr);
         },
         setHeight() {
             //设置固定表格的高度跟滚动表格的高度一致
-            $("#dayReportSteward .table-1 tbody").each(function () {
+            $("#dayReportManager .table-1 tbody").each(function () {
                 var $this=$(this),
                         index=$this.index();
                 //获取th
                 var $td=$this.find("tr:eq(0) td");
                 //获取table-2对应的tbody
-                var tbodyHeight=$("#dayReportSteward .table-2 tbody").eq(index-1).height();
+                var tbodyHeight=$("#dayReportManager .table-2 tbody").eq(index-1).height();
                 console.log(tbodyHeight);
                 $td.height(tbodyHeight);
             });
@@ -260,11 +282,11 @@
 
 <style lang="scss" scoped>
     .table-2 {
-    .thead-fixed{
-        width:720px;
-    th{
-        padding:8px 2px;
-    }
-    }
+        .thead-fixed{
+            width:620px;
+            th{
+                padding:8px 2px;
+            }
+        }
     }
 </style>

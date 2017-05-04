@@ -12,7 +12,11 @@
         <section class="basic-area">
             <!--第1行-->
             <div class="basic-list clearfix" v-for="item in turnOneToTwo(monthStewardFields.basicItem)">
-                <div v-for="value in item">
+                <div v-for="value in item" v-if="item.length==2" >
+                    <span>{{value.itemName}}</span>
+                    <span>{{value.itemNums}}</span>
+                </div>
+                <div v-for="value in item" v-if="item.length==3" style="width:32.3%;">
                     <span>{{value.itemName}}</span>
                     <span>{{value.itemNums}}</span>
                 </div>
@@ -28,7 +32,7 @@
                     <table cellspacing="0" width="100" class="table-1" cellpadding="0">
                         <thead class="forms-thead" width="100">
                         <tr>
-                            <th>工程管家</th>
+                            <th>客户姓名</th>
                         </tr>
                         </thead>
                         <tbody v-for="(item,index) in monthStewardFields.formItemFields.formItemArrs" >
@@ -191,7 +195,7 @@
             alert("报表中今天的收款金额、收款数、合同数需第二天凌晨从ERP进行同步数据，因此需明天才能统计今天的收款情况。");
         },
         turnOneToTwo(arr){
-            return definedUtil.turnOneDimensArrToTwoDimensArr(arr,2);
+            return definedUtil.turnOneDimensArrToTwoDimensArrSpe(arr);
         },
         setHeight() {
             //设置固定表格的高度跟滚动表格的高度一致
