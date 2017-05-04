@@ -110,7 +110,8 @@
                     </div>
                     <h4>时间</h4>
                     <div class="form-text">
-                        <input type="text" readonly placeholder="请选择时间" @click="datetimePickerObj.isShow=true"/>
+                        <input type="text" readonly placeholder="请选择时间" @click="datetimePickerObj.isShow=true"
+                                v-model="datetimePickerObj.comfirmDate"/>
                         <i></i>
                     </div>
                     <button type="button" class="common-btn common-all-length-btn common-active-btn margin-top-10"
@@ -140,7 +141,8 @@
             },
             datetimePickerObj:{
                 isShow:false,
-                transitionType:"slide-fade"
+                transitionType:"slide-fade",
+                comfirmDate:""
             },
             isLoading:false,
             isDataNull:false,
@@ -149,7 +151,7 @@
                 time:new Date().toLocaleDateString().replace(/\//g,'-'),
                 definedFields:{
                     area:"",
-                    status:""
+                    date:""
                 },
                 basicItem:[
                     {

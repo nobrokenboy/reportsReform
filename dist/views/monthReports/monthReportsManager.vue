@@ -155,7 +155,7 @@
             let curDate=new Date();
             return {
                 curYear:curDate.getFullYear(),
-                curMonth:curDate.getMonth(),
+                curMonth:curDate.getMonth()+1,
                 modalObj:{
                     isModalShow:false,
                     transitionType:"slide-fade"

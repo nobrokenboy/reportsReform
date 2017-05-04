@@ -20,7 +20,7 @@
                     <!--市-->
                     <div class="swiper-container swiper-container-2">
                         <ul class="date-lists swiper-wrapper">
-                            <li class="swiper-slide" v-for="item in monthLists" :class="{'swiper-active':i==activeMonth}">{{item+"月"}}</li>
+                            <li class="swiper-slide" v-for="item in monthLists" :class="{'swiper-active':item==activeMonth}">{{item+"月"}}</li>
                         </ul>
                         <div class="active-area"></div>
                     </div>
@@ -44,11 +44,13 @@
         let curDate=new Date();
         return {
             curYear:curDate.getFullYear(),
-            curMonth:curDate.getMonth(),
+            curMonth:curDate.getMonth()+1,
             curDate:curDate.getDate(),
             activeYear:0,
             activeMonth:0,
-            activeDate:0
+            activeDate:0,
+            dateLists:[],
+            _hasTouch:('ontouchstart' in window)
         }
     },
     computed:{
@@ -57,27 +59,48 @@
             var diffYear=this.curYear-2015+1;
             return Array.from({length:diffYear},(value,index) =>{
                 return this.curYear-index;
-            });
+            }).reverse();
         },
         monthLists(){
             return Array.from({length:12},(value,index) =>{
                 return index+1;
             });
-        },
-        dateLists(){
-
         }
     },
     mounted(){
-
+        const self=this;
+        self.activeYear=self.curYear;
+        self.activeMonth=self.curMonth;
+        self.activeDate=self.curDate;
+        self.setDatePickerData(self.activeYear,self.activeMonth);
+        console.log(self._hasTouch);
     },
     methods:{
+        setDatePickerData(activeYear,activeMonth){
+            const self=this;
+            //对天数进行设置
+            self.dateLists=self.setDate(activeYear,activeMonth);
+            //设置滑动的位置
+            self.setDistance();
+
+        },
+        setDate(activeYear,activeMonth){
+            //根据年份以及月份，算出天数
+            var dayNums=new Date(activeYear,activeMonth,0).getDate();
+            return Array.from({length:dayNums},(value,index) =>{
+                return index+1;
+            });
+        },
+        setDistance(){
+
+        },
         undoEvent(){
             const self=this;
             self.$parent.datetimePickerObj.isShow=false;
         },
         comfirmEvent(){
             const self=this;
+            self.$parent.datetimePickerObj.comfirmDate=self.activeYear+"-"+self.activeMonth+"-"+self.activeDate;
             self.$parent.datetimePickerObj.isShow=false;
         }
     }
@@ -166,12 +189,39 @@
         border-bottom:1px solid #ccc;
     }
     .date-select-lists .date-lists{
-        position:relative;
-        /*width:100%;*/
+        /*position:absolute;
+        left:0;
+       /!* top:120px;*!/
+        width:100%;
+        text-align:center;*/
+        position: relative;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        width: 100%;
+        height: 100%;
+        -webkit-transform: translate3d(0,0,0);
+        -moz-transform: translate3d(0,0,0);
+        -o-transform: translate(0,0);
+        -ms-transform: translate3d(0,0,0);
+        transform: translate3d(0,0,0);
+        -webkit-transition-property: -webkit-transform;
+        -moz-transition-property: -moz-transform;
+        -o-transition-property: -o-transform;
+        -ms-transition-property: -ms-transform;
+        transition-property: transform;
+        transition: all .5s ease-in;
+        text-align: center;
     }
     .date-select-lists .date-lists>li{
         list-style:none;
+        -webkit-flex-shrink: 0;
+        -ms-flex: 0 0 auto;
+        flex-shrink: 0;
+        width:100%;
         height:40px;
+        
     }
     .swiper-container{
         margin-left: auto;
