@@ -13,7 +13,7 @@
                     <!--年-->
                     <div class="swiper-container swiper-container-1">
                         <ul class="date-lists swiper-wrapper" @touchstart="touchStartEvent($event)" @touchmove="touchMoveEvent($event)"
-                              @touchend="touchEndEvent($event)">
+                              @touchend="touchEndEvent($event)" data-attr="0" ref="0">
                             <li class="swiper-slide" v-for="(i,index) in yearLists" :class="{'swiper-active':i==activeYear.name}" >{{i+"年"}}</li>
                         </ul>
                         <div class="active-area"></div>
@@ -21,16 +21,15 @@
                     <!--月-->
                     <div class="swiper-container swiper-container-2">
                         <ul class="date-lists swiper-wrapper" @touchstart="touchStartEvent($event)" @touchmove="touchMoveEvent($event)"
-                            @touchend="touchEndEvent($event)" >
-                            <li class="swiper-slide" v-for="(item,index) in monthLists" :class="{'swiper-active':item==activeMonth.name}"
-                                    v-if="">{{item+"月"}}</li>
+                            @touchend="touchEndEvent($event)"  data-attr="1" ref="1">
+                            <li class="swiper-slide" v-for="(item,index) in monthLists" :class="{'swiper-active':item==activeMonth.name}">{{item+"月"}}</li>
                         </ul>
                         <div class="active-area"></div>
                     </div>
                     <!--日-->
                     <div class="swiper-container swiper-container-3">
                         <ul class="date-lists swiper-wrapper" @touchstart="touchStartEvent($event)" @touchmove="touchMoveEvent($event)"
-                            @touchend="touchEndEvent($event)" >
+                            @touchend="touchEndEvent($event)"  data-attr="2" >
                             <li class="swiper-slide"  v-for="(i,index) in dateLists" :class="{'swiper-active':i==activeDate.name}">{{i+"日"}}</li>
                         </ul>
                         <div class="active-area"></div>
@@ -67,9 +66,10 @@
             initActiveIndex:2,
             startPosition:{},
             endPosition:{},
-            direction:"",
+            direction:0,
             sliderDistance:"",
-            sliderBlockNums:0
+            sliderBlockNums:0,
+            activeElement:""
         }
     },
     watch:{
@@ -137,14 +137,35 @@
             self.activeItemIndex=[self.activeYear.index,self.activeMonth.index,self.activeDate.index];
             console.log(self.activeItemIndex);
             console.log(self.dateItemsHeight);
+            console.log(self.activeYear.name);
+            console.log(self.activeMonth.name);
+            console.log(self.activeDate.name);
             Array.from(document.querySelectorAll(".date-lists")).forEach((value,index,arr)=>{
                 let containerEle=arr[index];
+                if(self.direction==0||self.direction==1){
+                    debugger
+                    containerEle.style.webkitTransform ="translate3d(0,-"+(self.activeItemIndex[index]-self.initActiveIndex)*self.dateItemsHeight+"px,0)";
+                    containerEle.style.MozTransform ="translate3d(0,-"+(self.activeItemIndex[index]-self.initActiveIndex)*self.dateItemsHeight+"px,0)";
+                    containerEle.style.msTransform ="translate3d(0,-"+(self.activeItemIndex[index]-self.initActiveIndex)*self.dateItemsHeight+"px,0)";
+                    containerEle.style.OTransform ="translate3d(0,-"+(self.activeItemIndex[index]-self.initActiveIndex)*self.dateItemsHeight+"px,0)";
+                    containerEle.style.transform="translate3d(0,-"+(self.activeItemIndex[index]-self.initActiveIndex)*self.dateItemsHeight+"px,0)";
+                }else if(self.direction==3){
+                    debugger
+                    containerEle.style.webkitTransform ="translate3d(0,"+(self.activeItemIndex[index]-self.initActiveIndex)*self.dateItemsHeight+"px,0)";
+                    containerEle.style.MozTransform ="translate3d(0,"+(self.activeItemIndex[index]-self.initActiveIndex)*self.dateItemsHeight+"px,0)";
+                    containerEle.style.msTransform ="translate3d(0,"+(self.activeItemIndex[index]-self.initActiveIndex)*self.dateItemsHeight+"px,0)";
+                    containerEle.style.OTransform ="translate3d(0,"+(self.activeItemIndex[index]-self.initActiveIndex)*self.dateItemsHeight+"px,0)";
+                    containerEle.style.transform="translate3d(0,"+(self.activeItemIndex[index]-self.initActiveIndex)*self.dateItemsHeight+"px,0)";
+                }
+           /*     debugger
                 containerEle.style.webkitTransform ="translate3d(0,-"+(self.activeItemIndex[index]-self.initActiveIndex)*self.dateItemsHeight+"px,0)";
                 containerEle.style.MozTransform ="translate3d(0,-"+(self.activeItemIndex[index]-self.initActiveIndex)*self.dateItemsHeight+"px,0)";
                 containerEle.style.msTransform ="translate3d(0,-"+(self.activeItemIndex[index]-self.initActiveIndex)*self.dateItemsHeight+"px,0)";
                 containerEle.style.OTransform ="translate3d(0,-"+(self.activeItemIndex[index]-self.initActiveIndex)*self.dateItemsHeight+"px,0)";
-                containerEle.style.transform="translate3d(0,-"+(self.activeItemIndex[index]-self.initActiveIndex)*self.dateItemsHeight+"px,0)";
+                containerEle.style.transform="translate3d(0,-"+(self.activeItemIndex[index]-self.initActiveIndex)*self.dateItemsHeight+"px,0*!/)";
+*/
             });
+
         },
         touchStartEvent(e){
             const self=this;
@@ -168,11 +189,82 @@
             //获取要滑动的块的个数
             self.sliderBlockNums=Math.ceil(self.sliderDistance/self.dateItemsHeight);
             console.log(self.sliderBlockNums);
+            //获取滑动的元素，进行判断
+            self.activeElement=event.currentTarget.getAttribute("data-attr");
+            console.log(self.activeElement);
             if(self.direction==1){//向上
                 console.log("向上");
+                if(self.activeElement==0){
+                    if(self.sliderBlockNums<self.yearLists.length-self.activeYear.index){
+                        self.activeYear.index+=self.sliderBlockNums;
+                    }else{
+                        self.activeYear.index=self.yearLists.length-1;
+                    }
+                    console.log(self.activeYear.index);
+                    //重新设置激活年份
+                    self.activeYear.name=self.yearLists[self.activeYear.index];
+                    //设置默认月份为第一个月和第一天
+                    self.activeMonth.name="1";
+                    self.activeMonth.index=0;
+                    self.activeDate.name="1";
+
+                }else if(self.activeElement==1){
+                    if(self.sliderBlockNums<self.monthLists.length-self.activeMonth.index){
+                        self.activeMonth.index+=self.sliderBlockNums;
+                    }else{
+                        self.activeMonth.index=self.monthLists.length-1;
+                    }
+                    console.log(self.activeMonth.index);
+                    //重新设置激活月
+                    self.activeMonth.name=self.monthLists[self.activeMonth.index];
+                    //默认设置第一天
+                    self.activeDate.name="1";
+                }/*else if(self.activeElement==2){
+                    if(){
+
+                    }else if(){
+
+                    }
+                }*/
+
             }else if(self.direction==3){//向下
                 console.log("向下");
+                if(self.activeElement==0){
+                    if(self.sliderBlockNums<self.activeYear.index){
+                        self.activeYear.index-=self.sliderBlockNums;
+                    }else{
+                        self.activeYear.index=0;
+                    }
+                    console.log(self.activeYear.index);
+                    //重新设置激活年份
+                    self.activeYear.name=self.yearLists[self.activeYear.index];
+                    //设置默认月份为第一个月和第一天
+                    self.activeMonth.name="1";
+                    self.activeMonth.index=0;
+                    self.activeDate.name="1";
+
+                }else if(self.activeElement==1){
+                    if(self.sliderBlockNums<self.activeMonth.index){
+                        self.activeMonth.index-=self.sliderBlockNums;
+                    }else{
+                        self.activeMonth.index=0;
+                    }
+                    console.log(self.activeMonth.index);
+                    //重新设置激活月
+                    self.activeMonth.name=self.monthLists[self.activeMonth.index];
+                    //默认设置第一天
+                    self.activeDate.name="1";
+                }/*else if(self.activeElement==2){
+                 if(){
+
+                 }else if(){
+
+                 }
+                 }*/
             }
+
+            //设置日期
+            self.setDatePickerData(self.activeYear.name,self.activeMonth.name);
 
         },
         undoEvent(){
