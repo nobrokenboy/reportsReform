@@ -4,7 +4,7 @@
   "description": "前端自动化模板",
   "main": "index.js",
   "scripts": {
-    "test": "webpack-dev-server --inline"
+    "test": "webpack-dev-server --host 0.0.0.0 --port 8094 --inline"
   },
   "author": "nobrokenboy",
   "license": "ISC",

@@ -103,6 +103,11 @@
         self.activeMonth.index=self.getIndexInArr(self.activeMonth.name,self.monthLists);
         console.log(self.activeMonth.index);
         self.activeDate.name=self.curDate;
+
+/*        //禁止微信浏览器弹簧效果
+        document.querySelector('body').addEventListener('touchstart', function (event) {
+            event.preventDefault();
+        });*/
     },
     methods:{
         setDatePickerData(activeYear,activeMonth){
@@ -162,6 +167,7 @@
         },
         touchStartEvent(e){
             const self=this;
+            e.preventDefault();
             console.log(e);
             self.startPosition.x=e.touches[0].pageX;
             self.startPosition.y=e.touches[0].pageY;
@@ -169,11 +175,13 @@
         },
         touchMoveEvent(e){
             const self=this;
+            e.preventDefault();
             self.endPosition.x=e.changedTouches[0].pageX;
             self.endPosition.y=e.changedTouches[0].pageY;
         },
         touchEndEvent(e){
             const self=this;
+            e.preventDefault();
             //获取方向以及距离
             self.direction=self.getDirection(self.startPosition.x,self.startPosition.y,self.endPosition.x,self.endPosition.y);
             self.sliderDistance=self.getSliderDistance(self.startPosition.x,self.startPosition.y,self.endPosition.x,self.endPosition.y);

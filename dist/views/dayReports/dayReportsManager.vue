@@ -113,7 +113,9 @@
                     <h4>时间</h4>
                     <div class="form-text">
                         <!--<input type="text" placeholder="请选择时间" id="startDate" readonly/>-->
-                        <calendar theme='#ff8000'></calendar>
+                        <!--<calendar theme='#ff8000'></calendar>-->
+                        <input type="text" readonly placeholder="请选择时间" @click="datetimePickerObj.isShow=true"
+                               v-model="datetimePickerObj.comfirmDate"/>
                         <i></i>
                     </div>
                     <button type="button" class="common-btn common-all-length-btn common-active-btn margin-top-10"
@@ -123,6 +125,10 @@
                 </form>
             </div>
         </app-modal>
+        <!--日期-->
+        <datetime-picker ref="datetimeObj" :isShowSelector="datetimePickerObj.isShow" :transition-type="datetimePickerObj.transitionType">
+
+        </datetime-picker>
 
     </div>
 </template>
@@ -131,7 +137,7 @@
     import calendar from 'auto-calendar/src/calendar.vue';
     import definedUtil from '../../static/js/mylibs/util';
     import 'foundation-datepicker/js/foundation-datepicker.js';
-    import datetimePicker from "../../static/js/component/datetimePicker.vue";
+    import DatetimePicker from "../../static/js/component/datetimePicker.vue";
     export default {
         props: [],
         data(){
@@ -139,6 +145,11 @@
             modalObj:{
                 isModalShow:false,
                 transitionType:"slide-fade"
+            },
+            datetimePickerObj:{
+                isShow:false,
+                transitionType:"slide-fade",
+                comfirmDate:""
             },
             isLoading:false,
             isDataNull:false,
@@ -333,9 +344,8 @@
         }
      },
     components:{
-        datetimePicker
-     }
-
+        DatetimePicker
+    }
     }
 </script>
 
