@@ -142,28 +142,21 @@
             console.log(self.activeDate.name);
             Array.from(document.querySelectorAll(".date-lists")).forEach((value,index,arr)=>{
                 let containerEle=arr[index];
-                if(self.direction==0||self.direction==1){
-                    debugger
+                if(self.activeItemIndex[index]-self.initActiveIndex>0){
                     containerEle.style.webkitTransform ="translate3d(0,-"+(self.activeItemIndex[index]-self.initActiveIndex)*self.dateItemsHeight+"px,0)";
                     containerEle.style.MozTransform ="translate3d(0,-"+(self.activeItemIndex[index]-self.initActiveIndex)*self.dateItemsHeight+"px,0)";
                     containerEle.style.msTransform ="translate3d(0,-"+(self.activeItemIndex[index]-self.initActiveIndex)*self.dateItemsHeight+"px,0)";
                     containerEle.style.OTransform ="translate3d(0,-"+(self.activeItemIndex[index]-self.initActiveIndex)*self.dateItemsHeight+"px,0)";
                     containerEle.style.transform="translate3d(0,-"+(self.activeItemIndex[index]-self.initActiveIndex)*self.dateItemsHeight+"px,0)";
-                }else if(self.direction==3){
-                    debugger
-                    containerEle.style.webkitTransform ="translate3d(0,"+(self.activeItemIndex[index]-self.initActiveIndex)*self.dateItemsHeight+"px,0)";
-                    containerEle.style.MozTransform ="translate3d(0,"+(self.activeItemIndex[index]-self.initActiveIndex)*self.dateItemsHeight+"px,0)";
-                    containerEle.style.msTransform ="translate3d(0,"+(self.activeItemIndex[index]-self.initActiveIndex)*self.dateItemsHeight+"px,0)";
-                    containerEle.style.OTransform ="translate3d(0,"+(self.activeItemIndex[index]-self.initActiveIndex)*self.dateItemsHeight+"px,0)";
-                    containerEle.style.transform="translate3d(0,"+(self.activeItemIndex[index]-self.initActiveIndex)*self.dateItemsHeight+"px,0)";
+                }else{
+                    containerEle.style.webkitTransform ="translate3d(0,"+(self.initActiveIndex-self.activeItemIndex[index])*self.dateItemsHeight+"px,0)";
+                    containerEle.style.MozTransform ="translate3d(0,"+(self.initActiveIndex-self.activeItemIndex[index])*self.dateItemsHeight+"px,0)";
+                    containerEle.style.msTransform ="translate3d(0,"+(self.initActiveIndex-self.activeItemIndex[index])*self.dateItemsHeight+"px,0)";
+                    containerEle.style.OTransform ="translate3d(0,"+(self.initActiveIndex-self.activeItemIndex[index])*self.dateItemsHeight+"px,0)";
+                    containerEle.style.transform="translate3d(0,"+(self.initActiveIndex-self.activeItemIndex[index])*self.dateItemsHeight+"px,0)";
                 }
-           /*     debugger
-                containerEle.style.webkitTransform ="translate3d(0,-"+(self.activeItemIndex[index]-self.initActiveIndex)*self.dateItemsHeight+"px,0)";
-                containerEle.style.MozTransform ="translate3d(0,-"+(self.activeItemIndex[index]-self.initActiveIndex)*self.dateItemsHeight+"px,0)";
-                containerEle.style.msTransform ="translate3d(0,-"+(self.activeItemIndex[index]-self.initActiveIndex)*self.dateItemsHeight+"px,0)";
-                containerEle.style.OTransform ="translate3d(0,-"+(self.activeItemIndex[index]-self.initActiveIndex)*self.dateItemsHeight+"px,0)";
-                containerEle.style.transform="translate3d(0,-"+(self.activeItemIndex[index]-self.initActiveIndex)*self.dateItemsHeight+"px,0*!/)";
-*/
+
+                console.log(containerEle.style.transform);
             });
 
         },
@@ -219,13 +212,16 @@
                     self.activeMonth.name=self.monthLists[self.activeMonth.index];
                     //默认设置第一天
                     self.activeDate.name="1";
-                }/*else if(self.activeElement==2){
-                    if(){
-
-                    }else if(){
-
+                }else if(self.activeElement==2){
+                    if(self.sliderBlockNums<self.dateLists.length-self.activeDate.index){
+                        self.activeDate.index+=self.sliderBlockNums;
+                    }else{
+                        self.activeDate.index=self.dateLists.length-1;
                     }
-                }*/
+                    self.activeDate.name=self.dateLists[self.activeDate.index];
+                    self.setDistance();
+                    return;
+                }
 
             }else if(self.direction==3){//向下
                 console.log("向下");
@@ -254,13 +250,16 @@
                     self.activeMonth.name=self.monthLists[self.activeMonth.index];
                     //默认设置第一天
                     self.activeDate.name="1";
-                }/*else if(self.activeElement==2){
-                 if(){
-
-                 }else if(){
-
+                }else if(self.activeElement==2){
+                     if(self.sliderBlockNums<self.activeDate.index){
+                         self.activeDate.index-=self.sliderBlockNums;
+                     }else{
+                         self.activeDate.index=0;
+                     }
+                    self.activeDate.name=self.dateLists[self.activeDate.index];
+                     self.setDistance();
+                     return;
                  }
-                 }*/
             }
 
             //设置日期
