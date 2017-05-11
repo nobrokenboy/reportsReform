@@ -3,12 +3,7 @@ var webpack = require('webpack');
 var CommonsChunkPlugin = require("webpack/lib/optimize/CommonsChunkPlugin");
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var glob = require('glob');
-/*{
-  "dayReports/day_reports":"./develop/views/dayReports/day_reports.js",
-    "monthReports/month_reports.js":"./develop/views/monthReports/month_reports.js",
-    "stewardDetailReport/detail_report_steward":"./develop/views/stewardDetailReport/detail_report_steward.js",
-    "managerDetailReport/detail_report_manager":"./develop/views/managerDetailReport/detail_report_manager.js"
-}*/
+
 function getEntry(globPath, pathDir){
     var files = glob.sync(globPath);
     console.log(files);
@@ -102,13 +97,8 @@ module.exports = {
       'vue$': 'vue/dist/vue.esm.js',
       'utils':path.join(__dirname,'./develop/static/js/mylibs'),
       'jquery':'jquery/src/jquery.js'//引入jquery插件需要用到
-    /*  'jquery':path.join(__dirname, 'node_modules/jquery/dist/jquery')*/
-  /*    'datepicker':path.join(__dirname,'bootstrap-datetimepicker/src')*/
     }
   },
- /* externals: {
-    jquery: 'jQuery'
-  },*/
   devServer: {
     historyApiFallback: true,
     noInfo: true,

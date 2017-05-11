@@ -6,7 +6,7 @@
                 <div class="select-list area-header">
                     <div v-on:click="undoEvent()">取消</div>
                     <div class="title">选择日期</div>
-                    <div v-on:click="comfirmEvent()">确定</div>
+                    <div v-on:click="comfirmEvent()" class="btn-sure">确定</div>
                 </div>
                 <!--content-->
                 <div class="select-list area-content clearfix date-slider-wrapper">
@@ -69,7 +69,8 @@
             direction:0,
             sliderDistance:"",
             sliderBlockNums:0,
-            activeElement:""
+            activeElement:"",
+            currentY:0
         }
     },
     watch:{
@@ -96,20 +97,17 @@
     },
     mounted(){
         const self=this;
-        self.activeYear.name=self.curYear;
-        self.activeYear.index=self.getIndexInArr(self.activeYear.name,self.yearLists);
-        console.log(self.activeYear.index);
-        self.activeMonth.name=self.curMonth;
-        self.activeMonth.index=self.getIndexInArr(self.activeMonth.name,self.monthLists);
-        console.log(self.activeMonth.index);
-        self.activeDate.name=self.curDate;
-
-/*        //禁止微信浏览器弹簧效果
-        document.querySelector('body').addEventListener('touchstart', function (event) {
-            event.preventDefault();
-        });*/
+        self.init();
     },
     methods:{
+        init(){
+            const self=this;
+            self.activeYear.name=self.curYear;
+            self.activeYear.index=self.getIndexInArr(self.activeYear.name,self.yearLists);
+            self.activeMonth.name=self.curMonth;
+            self.activeMonth.index=self.getIndexInArr(self.activeMonth.name,self.monthLists);;
+            self.activeDate.name=self.curDate;
+        },
         setDatePickerData(activeYear,activeMonth){
             const self=this;
             //对天数进行设置
@@ -140,11 +138,11 @@
             //激活位置刚好在中间
             const self=this;
             self.activeItemIndex=[self.activeYear.index,self.activeMonth.index,self.activeDate.index];
-            console.log(self.activeItemIndex);
+            /*console.log(self.activeItemIndex);
             console.log(self.dateItemsHeight);
             console.log(self.activeYear.name);
             console.log(self.activeMonth.name);
-            console.log(self.activeDate.name);
+            console.log(self.activeDate.name);*/
             Array.from(document.querySelectorAll(".date-lists")).forEach((value,index,arr)=>{
                 let containerEle=arr[index];
                 if(self.activeItemIndex[index]-self.initActiveIndex>0){
@@ -160,6 +158,7 @@
                     containerEle.style.OTransform ="translate3d(0,"+(self.initActiveIndex-self.activeItemIndex[index])*self.dateItemsHeight+"px,0)";
                     containerEle.style.transform="translate3d(0,"+(self.initActiveIndex-self.activeItemIndex[index])*self.dateItemsHeight+"px,0)";
                 }
+                /*containerEle.style.transitionDuration="0ms";*/
 
                 console.log(containerEle.style.transform);
             });
@@ -178,6 +177,7 @@
             e.preventDefault();
             self.endPosition.x=e.changedTouches[0].pageX;
             self.endPosition.y=e.changedTouches[0].pageY;
+
         },
         touchEndEvent(e){
             const self=this;
@@ -194,7 +194,6 @@
             self.activeElement=event.currentTarget.getAttribute("data-attr");
             console.log(self.activeElement);
             if(self.direction==1){//向上
-                console.log("向上");
                 if(self.activeElement==0){
                     if(self.sliderBlockNums<self.yearLists.length-self.activeYear.index){
                         self.activeYear.index+=self.sliderBlockNums;
@@ -232,7 +231,6 @@
                 }
 
             }else if(self.direction==3){//向下
-                console.log("向下");
                 if(self.activeElement==0){
                     if(self.sliderBlockNums<self.activeYear.index){
                         self.activeYear.index-=self.sliderBlockNums;
@@ -313,8 +311,12 @@
             }
 
             return result;
+        },
+        destory:function(){
+            const self=this;
+            self.init();
         }
-    }
+     }
     }
 </script>
 
@@ -383,6 +385,9 @@
         background-color:#fff;
         border-bottom:1px solid #C4C3C3;
     }
+    .btn-sure{
+        color: #ff8800;
+    }
     .date-select-lists .area-header>div{
         height:40px;
     }
@@ -418,7 +423,7 @@
         -ms-flex-direction: column;
         -webkit-flex-direction: column;
         flex-direction: column;
-    -webkit-transform: translate3d(0,0,0);
+        -webkit-transform: translate3d(0,0,0);
         -moz-transform: translate3d(0,0,0);
         -o-transform: translate(0,0);
         -ms-transform: translate3d(0,0,0);
