@@ -1,7 +1,7 @@
 <template >
     <transition :name="transitionType" >
         <div class="shade-panel" v-if="isShowSelector" v-on:click.self="undoEvent">
-            <div class="date-select-lists animation" >
+            <div class="date-select-lists" >
                 <!--header-->
                 <div class="select-list area-header">
                     <div v-on:click="undoEvent()">取消</div>
@@ -11,7 +11,7 @@
                 <!--content-->
                 <div class="select-list area-content clearfix date-slider-wrapper">
                     <!--年-->
-                    <div class="swiper-container swiper-container-1">
+                    <div class="swiper-container" v-if="datepickerType=='common'||datepickerType=='date'||datepickerType=='month'">
                         <ul class="date-lists swiper-wrapper" @touchstart="touchStartEvent($event)" @touchmove="touchMoveEvent($event)"
                               @touchend="touchEndEvent($event)" data-attr="0" ref="0">
                             <li class="swiper-slide" v-for="(i,index) in yearLists" :class="{'swiper-active':i==activeYear.name}" >{{i+"年"}}</li>
@@ -19,7 +19,7 @@
                         <div class="active-area"></div>
                     </div>
                     <!--月-->
-                    <div class="swiper-container swiper-container-2">
+                    <div class="swiper-container" v-if="datepickerType=='common'||datepickerType=='date'||datepickerType=='month'">
                         <ul class="date-lists swiper-wrapper" @touchstart="touchStartEvent($event)" @touchmove="touchMoveEvent($event)"
                             @touchend="touchEndEvent($event)"  data-attr="1" ref="1">
                             <li class="swiper-slide" v-for="(item,index) in monthLists" :class="{'swiper-active':item==activeMonth.name}">{{item+"月"}}</li>
@@ -27,10 +27,34 @@
                         <div class="active-area"></div>
                     </div>
                     <!--日-->
-                    <div class="swiper-container swiper-container-3">
+                    <div class="swiper-container" v-if="datepickerType=='common'||datepickerType=='date'">
                         <ul class="date-lists swiper-wrapper" @touchstart="touchStartEvent($event)" @touchmove="touchMoveEvent($event)"
                             @touchend="touchEndEvent($event)"  data-attr="2" >
                             <li class="swiper-slide"  v-for="(i,index) in dateLists" :class="{'swiper-active':i==activeDate.name}">{{i+"日"}}</li>
+                        </ul>
+                        <div class="active-area"></div>
+                    </div>
+                    <!--时-->
+                    <div class="swiper-container" v-if="datepickerType=='common'||datepickerType=='time'||datepickerType=='minute'">
+                        <ul class="date-lists swiper-wrapper" @touchstart="touchStartEvent($event)" @touchmove="touchMoveEvent($event)"
+                            @touchend="touchEndEvent($event)"  data-attr="3" >
+                            <li class="swiper-slide"  v-for="(i,index) in hourLists" :class="{'swiper-active':i==activeHour.name}">{{i+"时"}}</li>
+                        </ul>
+                        <div class="active-area"></div>
+                    </div>
+                    <!--分-->
+                    <div class="swiper-container" v-if="datepickerType=='common'||datepickerType=='time'||datepickerType=='minute'">
+                        <ul class="date-lists swiper-wrapper" @touchstart="touchStartEvent($event)" @touchmove="touchMoveEvent($event)"
+                            @touchend="touchEndEvent($event)"  data-attr="4" >
+                            <li class="swiper-slide"  v-for="(i,index) in minuteLists" :class="{'swiper-active':i==activeMinute.name}">{{i+"分"}}</li>
+                        </ul>
+                        <div class="active-area"></div>
+                    </div>
+                    <!--秒-->
+                    <div class="swiper-container" v-if="datepickerType=='common'||datepickerType=='time'">
+                        <ul class="date-lists swiper-wrapper" @touchstart="touchStartEvent($event)" @touchmove="touchMoveEvent($event)"
+                            @touchend="touchEndEvent($event)"  data-attr="5" >
+                            <li class="swiper-slide"  v-for="(i,index) in secondLists" :class="{'swiper-active':i==activeSecond.name}">{{i+"秒"}}</li>
                         </ul>
                         <div class="active-area"></div>
                     </div>
@@ -42,36 +66,63 @@
 
 <script type="text/ecmascript-6">
     export default {
-        props: ["isShowSelector","transitionType","shadeZIndex"],
+        /*
+        * @param datepickerType
+        * 结果如下：1.common:年月日时分秒（6）
+        *           2.date:年月日（3）
+        *           3.time:时分秒(3)
+        *           4.month:年月（2）
+        *           5.minute:时分（2）
+        * */
+        props: ["isShowSelector","transitionType","shadeZIndex","beginYear","endYear","dateValue","datepickerType"],
         data(){
-        let curDate=new Date();
-        return {
-            curYear:curDate.getFullYear(),
-            curMonth:curDate.getMonth()+1,
-            curDate:curDate.getDate(),
-            activeYear:{
-                name:"",
-                index:0
-            },
-            activeMonth:{
-                name:"",
-                index:0
-            },
-            activeDate:{
-                name:"",
-                index:0
-            },
-            dateItemsHeight:40,
-            activeItemIndex:[],
-            initActiveIndex:2,
-            startPosition:{},
-            endPosition:{},
-            direction:0,
-            sliderDistance:"",
-            sliderBlockNums:0,
-            activeElement:"",
-            currentY:0
-        }
+         const self=this;
+         let curDate=new Date();
+        console.log(self.beginYear);
+            return {
+                curYear:curDate.getFullYear(),
+                curMonth:curDate.getMonth()+1,
+                curDate:curDate.getDate(),
+                curHour:curDate.getHours(),
+                curMinute:curDate.getMinutes(),
+                curSecond:curDate.getSeconds(),
+                atBeginYear:parseInt(self.beginYear)||1900,
+                initDateObj:{},
+                activeYear:{
+                    name:"",
+                    index:0
+                },
+                activeMonth:{
+                    name:"",
+                    index:0
+                },
+                activeDate:{
+                    name:"",
+                    index:0
+                },
+                activeHour:{
+                    name:"",
+                    index:0
+                },
+                activeMinute:{
+                    name:"",
+                    index:0
+                },
+                activeSecond:{
+                    name:"",
+                    index:0
+                },
+                dateItemsHeight:40,
+                activeItemIndex:[],
+                initActiveIndex:2,
+                startPosition:{},
+                endPosition:{},
+                direction:0,
+                sliderDistance:"",
+                sliderBlockNums:0,
+                activeElement:"",
+                currentY:0
+            }
     },
     watch:{
         isShowSelector(newVal,oldVal){
@@ -82,31 +133,98 @@
         }
     },
     computed:{
+        atEndYear(){
+            const self=this;
+            return parseInt(self.endYear)||self.curYear;
+        },
         yearLists(){
-            //设置起始年份为2015年
-            var diffYear=this.curYear-2015+1;
+            var diffYear=this.atEndYear-this.atBeginYear+1;
+            console.log(diffYear);
             return Array.from({length:diffYear},(value,index) =>{
-                return this.curYear-index;
+                return this.atEndYear-index;
             }).reverse();
         },
         monthLists(){
             return Array.from({length:12},(value,index) =>{
                 return index+1;
             });
+        },
+        hourLists(){
+            return Array.from({length:24},(value,index)=>{
+                return index<=9?"0"+index:index;
+            });
+        },
+        minuteLists(){
+            return Array.from({length:60},(value,index)=>{
+                return index<=9?"0"+index:index;
+            });
+        },
+        secondLists(){
+            return Array.from({length:60},(value,index)=>{
+                return index<=9?"0"+index:index;
+            });
+        },
+        computedWidth(){
+            const self=this;
+            let result;
+            if(self.datepickerType=="common"){
+                result="15%";
+            }else if(self.datepickerType=="date"||self.datepickerType=="time"){
+                result="32%";
+            }else if(self.datepickerType=="month"||self.datepickerType=="minute"){
+                result="48%";
+            }
+            return result;
         }
     },
     mounted(){
         const self=this;
+        self.getInitDate();
         self.init();
+        console.log(self.hourLists);
+        console.log(self.minuteLists);
+        console.log(self.secondLists);
     },
     methods:{
+        getInitDate(){
+            const self=this;;
+            //处理日期
+           if(self.dateValue){
+               const tempArr=self.dateValue.replace(/:/g, "-").replace(" ", "-").split("-");
+               console.log(tempArr);
+               self.initDateObj.initYear=tempArr[0];
+               self.initDateObj.initMonth=tempArr[1];
+               self.initDateObj.initDate=tempArr[2];
+               self.initDateObj.initHour=tempArr[3];
+               self.initDateObj.initMinute=tempArr[4];
+               self.initDateObj.initSecond=tempArr[5];
+           }else{
+               self.initDateObj.initYear=self.curYear;
+               self.initDateObj.initMonth=self.curMonth;
+               self.initDateObj.initDate=self.curDate;
+               self.initDateObj.initHour=self.curHour;
+               self.initDateObj.initMinute=self.curMinute;
+               self.initDateObj.initSecond=self.curSecond;
+           }
+            console.log(self.initDateObj);
+
+        },
         init(){
             const self=this;
-            self.activeYear.name=self.curYear;
+            //初始化年月日
+            self.activeYear.name=self.initDateObj.initYear;
             self.activeYear.index=self.getIndexInArr(self.activeYear.name,self.yearLists);
-            self.activeMonth.name=self.curMonth;
+            self.activeMonth.name=self.initDateObj.initMonth;
             self.activeMonth.index=self.getIndexInArr(self.activeMonth.name,self.monthLists);;
-            self.activeDate.name=self.curDate;
+            self.activeDate.name=self.initDateObj.initDate;
+
+            //初始化时分秒
+            self.activeHour.name=self.initDateObj.initHour;
+            self.activeHour.index=self.getIndexInArr(self.activeHour.name,self.hourLists);
+            self.activeMinute.name=self.initDateObj.initMinute;
+            self.activeMinute.index=self.getIndexInArr(self.activeMinute.name,self.minuteLists);
+            self.activeSecond.name=self.initDateObj.initSecond;
+            self.activeSecond.index=self.getIndexInArr(self.activeSecond.name,self.secondLists);
         },
         setDatePickerData(activeYear,activeMonth){
             const self=this;
@@ -115,6 +233,7 @@
             self.activeDate.index=self.getIndexInArr(self.activeDate.name,self.dateLists);
             console.log(self.activeDate.index);
             //设置滑动的位置
+            self.$nextTick(self.setItemsWidth);
             self.$nextTick(self.setDistance);
 
         },
@@ -134,15 +253,37 @@
             }
             return result;
         },
+        setItemsWidth(){
+            const self=this;
+            Array.from(document.querySelectorAll(".swiper-container")).forEach((value,index,arr)=>{
+                console.log(arr[index]);
+                arr[index].style.width=self.computedWidth;
+            });
+        },
         setDistance(){
             //激活位置刚好在中间
             const self=this;
-            self.activeItemIndex=[self.activeYear.index,self.activeMonth.index,self.activeDate.index];
+            //根据类型
+            if(self.datepickerType=="common"){
+                self.activeItemIndex=[self.activeYear.index,self.activeMonth.index,self.activeDate.index,self.activeHour.index,
+                    self.activeMinute.index,self.activeSecond.index];
+            }else if(self.datepickerType=="date"){
+                self.activeItemIndex=[self.activeYear.index,self.activeMonth.index,self.activeDate.index];
+            }else if(self.datepickerType=="month"){
+                self.activeItemIndex=[self.activeYear.index,self.activeMonth.index];
+            }else if(self.datepickerType=="time"){
+                self.activeItemIndex=[self.activeHour.index,self.activeMinute.index,self.activeSecond.index];
+            }else if(self.datepickerType=="minute"){
+                self.activeItemIndex=[self.activeHour.index,self.activeMinute.index];
+            }
+
             /*console.log(self.activeItemIndex);
-            console.log(self.dateItemsHeight);
             console.log(self.activeYear.name);
             console.log(self.activeMonth.name);
-            console.log(self.activeDate.name);*/
+            console.log(self.activeDate.name);
+            console.log(self.activeHour.name);
+            console.log(self.activeMinute.name);
+            console.log(self.activeSecond.name);*/
             Array.from(document.querySelectorAll(".date-lists")).forEach((value,index,arr)=>{
                 let containerEle=arr[index];
                 if(self.activeItemIndex[index]-self.initActiveIndex>0){
@@ -158,7 +299,6 @@
                     containerEle.style.OTransform ="translate3d(0,"+(self.initActiveIndex-self.activeItemIndex[index])*self.dateItemsHeight+"px,0)";
                     containerEle.style.transform="translate3d(0,"+(self.initActiveIndex-self.activeItemIndex[index])*self.dateItemsHeight+"px,0)";
                 }
-                /*containerEle.style.transitionDuration="0ms";*/
 
                 console.log(containerEle.style.transform);
             });
@@ -228,6 +368,27 @@
                     self.activeDate.name=self.dateLists[self.activeDate.index];
                     self.setDistance();
                     return;
+                }else if(self.activeElement==3){
+                    if(self.sliderBlockNums<self.hourLists.length-self.activeHour.index){
+                        self.activeHour.index+=self.sliderBlockNums;
+                    }else{
+                        self.activeHour.index=self.hourLists.length-1;
+                    }
+                    self.activeHour.name=self.hourLists[self.activeHour.index];
+                }else if(self.activeElement==4){
+                    if(self.sliderBlockNums<self.minuteLists.length-self.activeMinute.index){
+                        self.activeMinute.index+=self.sliderBlockNums;
+                    }else{
+                        self.activeMinute.index=self.minuteLists.length-1;
+                    }
+                    self.activeMinute.name=self.minuteLists[self.activeMinute.index];
+                }else if(self.activeElement==5){
+                    if(self.sliderBlockNums<self.secondLists.length-self.activeSecond.index){
+                        self.activeSecond.index+=self.sliderBlockNums;
+                    }else{
+                        self.activeSecond.index=self.secondLists.length-1;
+                    }
+                    self.activeSecond.name=self.secondLists[self.activeSecond.index];
                 }
 
             }else if(self.direction==3){//向下
@@ -263,9 +424,30 @@
                          self.activeDate.index=0;
                      }
                     self.activeDate.name=self.dateLists[self.activeDate.index];
-                     self.setDistance();
-                     return;
-                 }
+                    self.setDistance();
+                    return;
+                }else if(self.activeElement==3){
+                    if(self.sliderBlockNums<self.activeHour.index){
+                        self.activeHour.index-=self.sliderBlockNums;
+                    }else{
+                        self.activeHour.index=0;
+                    }
+                    self.activeHour.name=self.hourLists[self.activeHour.index];
+                }else if(self.activeElement==4){
+                    if(self.sliderBlockNums<self.activeMinute.index){
+                        self.activeMinute.index-=self.sliderBlockNums;
+                    }else{
+                        self.activeMinute.index=0;
+                    }
+                    self.activeMinute.name=self.minuteLists[self.activeMinute.index];
+                }else if(self.activeElement==5){
+                    if(self.sliderBlockNums<self.activeSecond.index){
+                        self.activeSecond.index-=self.sliderBlockNums;
+                    }else{
+                        self.activeSecond.index=0;
+                    }
+                    self.activeSecond.name=self.secondLists[self.activeSecond.index];
+                }
             }
 
             //设置日期
@@ -278,7 +460,19 @@
         },
         comfirmEvent(){
             const self=this;
-            self.$parent.datetimePickerObj.comfirmDate=self.activeYear.name+"-"+self.activeMonth.name+"-"+self.activeDate.name;
+            //根据类型进行赋值
+            if(self.datepickerType=="common"){
+                self.$parent.datetimePickerObj.comfirmDate=self.activeYear.name+"-"+self.activeMonth.name+"-"+self.activeDate.name
+                +" "+self.activeHour.name+":"+self.activeMinute.name+":"+self.activeSecond.name;
+            }else if(self.datepickerType=="date"){
+                self.$parent.datetimePickerObj.comfirmDate=self.activeYear.name+"-"+self.activeMonth.name+"-"+self.activeDate.name;
+            }else if(self.datepickerType=="month"){
+                self.$parent.datetimePickerObj.comfirmDate=self.activeYear.name+"-"+self.activeMonth.name;
+            }else if(self.datepickerType=="time"){
+                self.$parent.datetimePickerObj.comfirmDate=self.activeHour.name+":"+self.activeMinute.name+":"+self.activeSecond.name;
+            }else if(self.datepickerType=="minute"){
+                self.$parent.datetimePickerObj.comfirmDate=self.activeHour.name+":"+self.activeMinute.name;
+            }
             self.$parent.datetimePickerObj.isShow=false;
         },
         getAngle(dx,dy){//获取滑动的角度
@@ -341,7 +535,6 @@
         border:1px solid #ccc;
         border-radius:3px;
         color:#C3C3C3;
-        font-size:16px;
         overflow: hidden;
     }
     .date-select-lists .select-list{
@@ -350,7 +543,6 @@
     .date-select-lists .select-list>div{
         position:relative;
         float:left;
-        width:32%;
         height:100%;
         line-height:40px;
         text-align:center;
@@ -389,6 +581,7 @@
         color: #ff8800;
     }
     .date-select-lists .area-header>div{
+        width:32%;
         height:40px;
     }
     .date-select-lists .select-area{
@@ -406,11 +599,6 @@
         border-bottom:1px solid #ccc;
     }
     .date-select-lists .date-lists{
-        /*position:absolute;
-        left:0;
-       /!* top:120px;*!/
-        width:100%;
-        text-align:center;*/
         position: relative;
         display: -webkit-box;
         display: -ms-flexbox;
@@ -453,68 +641,13 @@
         height:auto;
     }
     .swiper-active{
-        font-size:18px;
         color:#2b2b2b;
     }
-    .animation{
-        -webkit-animation-duration:.2s;
-        animation-duration:.2s;
-        -webkit-animation-timing-function:ease-in;
-        animation-timing-function:ease-in;
-    }
-    .slideUp{
-        -webkit-animation-name:slideUp;
-        animation-name:slideUp;
-    }
-    .slideDown{
-        -webkit-animation-name:slideDown;
-        animation-name:slideDown;
-    }
-    /*.date-select-lists{
-        transform:translateY(100%);
-            -webkit-transform:translateY(100%);
-    }*/
-
-    /*动画效果*/
-    @keyframes slideUp{
-        0%{
-            transform:translateY(-100%);
-            -webkit-transform:translateY(-100%);
-        }
-        100%{
-            transform:translateY(0);
-            -webkit-transform:translateY(0);
-        }
-    }
-    @-webkit-keyframes slideUp{
-        0%{
-            transform:translateY(-100%);
-            -webkit-transform:translateY(-100%);
-        }
-        100%{
-            transform:translateY(0);
-            -webkit-transform:translateY(0);
+    /*兼容各种分辨率*/
+    @media all and (max-width:350px){
+        .date-select-lists{
+            font-size:14px;
         }
     }
 
-    @keyframes slideDown{
-        0%{
-            transform:translateY(100%);
-            -webkit-transform:translateY(100%);
-        }
-        100%{
-            transform:translateY(0);
-            -webkit-transform:translateY(0);
-        }
-    }
-    @-webkit-keyframes slideUp{
-        0%{
-            transform:translateY(100%);
-            -webkit-transform:translateY(100%);
-        }
-        100%{
-            transform:translateY(0);
-            -webkit-transform:translateY(0);
-        }
-    }
 </style>
