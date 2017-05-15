@@ -123,7 +123,7 @@
         </app-modal>
         <!--日期-->
         <datetime-picker ref="datetimeObj" :isShowSelector="datetimePickerObj.isShow" :transition-type="datetimePickerObj.transitionType"
-                beginYear="2015" endYear="2017" dateValue="2017-10-21 10:00" >
+                beginYear="2015" endYear="2017" dateValue="2017-10-21 10:45:20" datepickerType="common">
         </datetime-picker>
     </div>
 </template>

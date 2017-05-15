@@ -5,55 +5,58 @@
                 <!--header-->
                 <div class="select-list area-header">
                     <div v-on:click="undoEvent()">取消</div>
-                    <div class="title">选择日期</div>
-                    <div v-on:click="comfirmEvent()" class="btn-sure">确定</div>
+                    <div class="title" v-if="datepickerType=='date'">选择日期</div>
+                    <div class="title" v-if="datepickerType=='common'">选择日期时间</div>
+                    <div class="title" v-if="datepickerType=='month'">选择月份</div>
+                    <div class="title" v-if="datepickerType=='time'||datepickerType=='minute'">选择时间</div>
+                    <div v-on:click="comfirmEvent()" class="btn-sure" :style="{'color':themeColor||'#f80'}">确定</div>
                 </div>
                 <!--content-->
                 <div class="select-list area-content clearfix date-slider-wrapper">
                     <!--年-->
                     <div class="swiper-container" v-if="datepickerType=='common'||datepickerType=='date'||datepickerType=='month'">
-                        <ul class="date-lists swiper-wrapper" @touchstart="touchStartEvent($event)" @touchmove="touchMoveEvent($event)"
-                              @touchend="touchEndEvent($event)" data-attr="0" ref="0">
+                        <ul class="date-lists swiper-wrapper" @touchstart.prevent="touchStartEvent($event)" @touchmove.prevent="touchMoveEvent($event)"
+                              @touchend.prevent="touchEndEvent($event)"  data-attr="0" ref="0">
                             <li class="swiper-slide" v-for="(i,index) in yearLists" :class="{'swiper-active':i==activeYear.name}" >{{i+"年"}}</li>
                         </ul>
                         <div class="active-area"></div>
                     </div>
                     <!--月-->
                     <div class="swiper-container" v-if="datepickerType=='common'||datepickerType=='date'||datepickerType=='month'">
-                        <ul class="date-lists swiper-wrapper" @touchstart="touchStartEvent($event)" @touchmove="touchMoveEvent($event)"
-                            @touchend="touchEndEvent($event)"  data-attr="1" ref="1">
+                        <ul class="date-lists swiper-wrapper" @touchstart.prevent="touchStartEvent($event)" @touchmove.prevent="touchMoveEvent($event)"
+                            @touchend.prevent="touchEndEvent($event)"   data-attr="1" ref="1">
                             <li class="swiper-slide" v-for="(item,index) in monthLists" :class="{'swiper-active':item==activeMonth.name}">{{item+"月"}}</li>
                         </ul>
                         <div class="active-area"></div>
                     </div>
                     <!--日-->
                     <div class="swiper-container" v-if="datepickerType=='common'||datepickerType=='date'">
-                        <ul class="date-lists swiper-wrapper" @touchstart="touchStartEvent($event)" @touchmove="touchMoveEvent($event)"
-                            @touchend="touchEndEvent($event)"  data-attr="2" >
+                        <ul class="date-lists swiper-wrapper" @touchstart.prevent="touchStartEvent($event)" @touchmove.prevent="touchMoveEvent($event)"
+                            @touchend.prevent="touchEndEvent($event)"   data-attr="2" >
                             <li class="swiper-slide"  v-for="(i,index) in dateLists" :class="{'swiper-active':i==activeDate.name}">{{i+"日"}}</li>
                         </ul>
                         <div class="active-area"></div>
                     </div>
                     <!--时-->
                     <div class="swiper-container" v-if="datepickerType=='common'||datepickerType=='time'||datepickerType=='minute'">
-                        <ul class="date-lists swiper-wrapper" @touchstart="touchStartEvent($event)" @touchmove="touchMoveEvent($event)"
-                            @touchend="touchEndEvent($event)"  data-attr="3" >
+                        <ul class="date-lists swiper-wrapper" @touchstart.prevent="touchStartEvent($event)" @touchmove.prevent="touchMoveEvent($event)"
+                            @touchend.prevent="touchEndEvent($event)"  data-attr="3" >
                             <li class="swiper-slide"  v-for="(i,index) in hourLists" :class="{'swiper-active':i==activeHour.name}">{{i+"时"}}</li>
                         </ul>
                         <div class="active-area"></div>
                     </div>
                     <!--分-->
                     <div class="swiper-container" v-if="datepickerType=='common'||datepickerType=='time'||datepickerType=='minute'">
-                        <ul class="date-lists swiper-wrapper" @touchstart="touchStartEvent($event)" @touchmove="touchMoveEvent($event)"
-                            @touchend="touchEndEvent($event)"  data-attr="4" >
+                        <ul class="date-lists swiper-wrapper" @touchstart.prevent="touchStartEvent($event)" @touchmove.prevent="touchMoveEvent($event)"
+                            @touchend.prevent="touchEndEvent($event)" data-attr="4" >
                             <li class="swiper-slide"  v-for="(i,index) in minuteLists" :class="{'swiper-active':i==activeMinute.name}">{{i+"分"}}</li>
                         </ul>
                         <div class="active-area"></div>
                     </div>
                     <!--秒-->
                     <div class="swiper-container" v-if="datepickerType=='common'||datepickerType=='time'">
-                        <ul class="date-lists swiper-wrapper" @touchstart="touchStartEvent($event)" @touchmove="touchMoveEvent($event)"
-                            @touchend="touchEndEvent($event)"  data-attr="5" >
+                        <ul class="date-lists swiper-wrapper" @touchstart.prevent="touchStartEvent($event)" @touchmove.prevent="touchMoveEvent($event)"
+                            @touchend.prevent="touchEndEvent($event)"   data-attr="5" >
                             <li class="swiper-slide"  v-for="(i,index) in secondLists" :class="{'swiper-active':i==activeSecond.name}">{{i+"秒"}}</li>
                         </ul>
                         <div class="active-area"></div>
@@ -74,7 +77,7 @@
         *           4.month:年月（2）
         *           5.minute:时分（2）
         * */
-        props: ["isShowSelector","transitionType","shadeZIndex","beginYear","endYear","dateValue","datepickerType"],
+        props: ["isShowSelector","transitionType","shadeZIndex","beginYear","endYear","dateValue","datepickerType","themeColor"],
         data(){
          const self=this;
          let curDate=new Date();
@@ -115,6 +118,7 @@
                 dateItemsHeight:40,
                 activeItemIndex:[],
                 initActiveIndex:2,
+                isMoveStart:false,
                 startPosition:{},
                 endPosition:{},
                 direction:0,
@@ -276,7 +280,6 @@
             }else if(self.datepickerType=="minute"){
                 self.activeItemIndex=[self.activeHour.index,self.activeMinute.index];
             }
-
             /*console.log(self.activeItemIndex);
             console.log(self.activeYear.name);
             console.log(self.activeMonth.name);
@@ -306,22 +309,38 @@
         },
         touchStartEvent(e){
             const self=this;
-            e.preventDefault();
             console.log(e);
             self.startPosition.x=e.touches[0].pageX;
             self.startPosition.y=e.touches[0].pageY;
+            self.isMoveStart=true;
 
         },
         touchMoveEvent(e){
             const self=this;
-            e.preventDefault();
             self.endPosition.x=e.changedTouches[0].pageX;
             self.endPosition.y=e.changedTouches[0].pageY;
 
+            if(self.isMoveStart){//避免横屏
+                console.log("hello");
+                self.getBasicParams();
+            }
         },
         touchEndEvent(e){
+            const self=this
+            if(self.isMoveStart){
+                //更新日期数据
+                self.updateDateData();
+                //设置日期
+                self.setDatePickerData(self.activeYear.name,self.activeMonth.name);
+            }
+
+        },
+        undoEvent(){
             const self=this;
-            e.preventDefault();
+            self.$parent.datetimePickerObj.isShow=false;
+        },
+        getBasicParams(){
+            const self=this;
             //获取方向以及距离
             self.direction=self.getDirection(self.startPosition.x,self.startPosition.y,self.endPosition.x,self.endPosition.y);
             self.sliderDistance=self.getSliderDistance(self.startPosition.x,self.startPosition.y,self.endPosition.x,self.endPosition.y);
@@ -333,6 +352,9 @@
             //获取滑动的元素，进行判断
             self.activeElement=event.currentTarget.getAttribute("data-attr");
             console.log(self.activeElement);
+        },
+        updateDateData(){
+            const self=this;
             if(self.direction==1){//向上
                 if(self.activeElement==0){
                     if(self.sliderBlockNums<self.yearLists.length-self.activeYear.index){
@@ -418,11 +440,11 @@
                     //默认设置第一天
                     self.activeDate.name="1";
                 }else if(self.activeElement==2){
-                     if(self.sliderBlockNums<self.activeDate.index){
-                         self.activeDate.index-=self.sliderBlockNums;
-                     }else{
-                         self.activeDate.index=0;
-                     }
+                    if(self.sliderBlockNums<self.activeDate.index){
+                        self.activeDate.index-=self.sliderBlockNums;
+                    }else{
+                        self.activeDate.index=0;
+                    }
                     self.activeDate.name=self.dateLists[self.activeDate.index];
                     self.setDistance();
                     return;
@@ -449,14 +471,6 @@
                     self.activeSecond.name=self.secondLists[self.activeSecond.index];
                 }
             }
-
-            //设置日期
-            self.setDatePickerData(self.activeYear.name,self.activeMonth.name);
-
-        },
-        undoEvent(){
-            const self=this;
-            self.$parent.datetimePickerObj.isShow=false;
         },
         comfirmEvent(){
             const self=this;
@@ -576,9 +590,6 @@
         line-height:40px;
         background-color:#fff;
         border-bottom:1px solid #C4C3C3;
-    }
-    .btn-sure{
-        color: #ff8800;
     }
     .date-select-lists .area-header>div{
         width:32%;
