@@ -123,7 +123,7 @@
         </app-modal>
         <!--日期-->
         <datetime-picker ref="datetimeObj" :isShowSelector="datetimePickerObj.isShow" :transition-type="datetimePickerObj.transitionType"
-                beginYear="2015" endYear="2017" dateValue="2017-10-21 10:45:20" datepickerType="common">
+                beginYear="2015" endYear="2017"  datepickerType="common" v-on:getdate="changeDateSelector">
         </datetime-picker>
     </div>
 </template>
@@ -325,6 +325,15 @@
                 var theadThWidth=$(".table-2 tbody tr td").eq(index).width();
                 $this.width(theadThWidth);
             });
+        },
+        changeDateSelector(param){
+            const self=this;
+            if(param){
+                //获取值并且关闭弹框
+                self.datetimePickerObj.comfirmDate=param;
+            }
+            self.datetimePickerObj.isShow=false;
+
         }
      },
     components:{

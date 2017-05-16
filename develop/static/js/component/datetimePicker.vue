@@ -125,7 +125,8 @@
                 sliderDistance:"",
                 sliderBlockNums:0,
                 activeElement:"",
-                currentY:0
+                currentY:0,
+                backDateValue:""
             }
     },
     watch:{
@@ -260,7 +261,6 @@
         setItemsWidth(){
             const self=this;
             Array.from(document.querySelectorAll(".swiper-container")).forEach((value,index,arr)=>{
-                console.log(arr[index]);
                 arr[index].style.width=self.computedWidth;
             });
         },
@@ -334,10 +334,6 @@
                 self.setDatePickerData(self.activeYear.name,self.activeMonth.name);
             }
 
-        },
-        undoEvent(){
-            const self=this;
-            self.$parent.datetimePickerObj.isShow=false;
         },
         getBasicParams(){
             const self=this;
@@ -472,22 +468,28 @@
                 }
             }
         },
+        undoEvent(){
+            const self=this;
+            //触发事件
+            self.$emit("getdate");
+        },
         comfirmEvent(){
             const self=this;
             //根据类型进行赋值
             if(self.datepickerType=="common"){
-                self.$parent.datetimePickerObj.comfirmDate=self.activeYear.name+"-"+self.activeMonth.name+"-"+self.activeDate.name
+                self.backDateValue=self.activeYear.name+"-"+self.activeMonth.name+"-"+self.activeDate.name
                 +" "+self.activeHour.name+":"+self.activeMinute.name+":"+self.activeSecond.name;
             }else if(self.datepickerType=="date"){
-                self.$parent.datetimePickerObj.comfirmDate=self.activeYear.name+"-"+self.activeMonth.name+"-"+self.activeDate.name;
+                self.backDateValue=self.activeYear.name+"-"+self.activeMonth.name+"-"+self.activeDate.name;
             }else if(self.datepickerType=="month"){
-                self.$parent.datetimePickerObj.comfirmDate=self.activeYear.name+"-"+self.activeMonth.name;
+                self.backDateValue=self.activeYear.name+"-"+self.activeMonth.name;
             }else if(self.datepickerType=="time"){
-                self.$parent.datetimePickerObj.comfirmDate=self.activeHour.name+":"+self.activeMinute.name+":"+self.activeSecond.name;
+                self.backDateValue=self.activeHour.name+":"+self.activeMinute.name+":"+self.activeSecond.name;
             }else if(self.datepickerType=="minute"){
-                self.$parent.datetimePickerObj.comfirmDate=self.activeHour.name+":"+self.activeMinute.name;
+                self.backDateValue=self.activeHour.name+":"+self.activeMinute.name;
             }
-            self.$parent.datetimePickerObj.isShow=false;
+
+            self.$emit("getdate", self.backDateValue);
         },
         getAngle(dx,dy){//获取滑动的角度
             return Math.atan2(dy, dx) * 180 / Math.PI;
@@ -561,6 +563,9 @@
         line-height:40px;
         text-align:center;
     }
+    .date-select-lists .select-list>div~div{
+        margin-left:2%;
+    }
     .active-area{
         position:absolute;
         left:2px;
@@ -574,12 +579,6 @@
         border-bottom:1px solid #ccc;
 
     }
-    .date-select-lists .select-list>div~div{
-        margin-left:2%;
-    }
-    .date-select-lists .title{
-        color:#000;
-    }
     .date-select-lists .area-header{
         position:absolute;
         top:0;
@@ -591,23 +590,12 @@
         background-color:#fff;
         border-bottom:1px solid #C4C3C3;
     }
+    .date-select-lists .title{
+        color:#000;
+    }
     .date-select-lists .area-header>div{
         width:32%;
         height:40px;
-    }
-    .date-select-lists .select-area{
-        position:absolute;
-        left:0;
-        bottom:40px;
-        z-index:2;
-        width:100%;
-        height:40px;
-        line-height:40px;
-
-    }
-    .date-select-lists .select-area>div{
-        border-top:1px solid #ccc;
-        border-bottom:1px solid #ccc;
     }
     .date-select-lists .date-lists{
         position: relative;
