@@ -151,10 +151,10 @@
         },
         monthLists(){
             return Array.from({length:12},(value,index) =>{
-                return index+1;
+                return index+1<=9?"0"+(index+1):index+1;
             });
         },
-        hourLists(){
+        hourLists(){1
             return Array.from({length:24},(value,index)=>{
                 return index<=9?"0"+index:index;
             });
@@ -246,7 +246,7 @@
             //根据年份以及月份，算出天数
             var dayNums=new Date(activeYear,activeMonth,0).getDate();
             return Array.from({length:dayNums},(value,index) =>{
-                return index+1;
+                return index+1<=9?"0"+(index+1):index+1;
             });
         },
         getIndexInArr(value,arr){
@@ -362,9 +362,9 @@
                     //重新设置激活年份
                     self.activeYear.name=self.yearLists[self.activeYear.index];
                     //设置默认月份为第一个月和第一天
-                    self.activeMonth.name="1";
+                    self.activeMonth.name="01";
                     self.activeMonth.index=0;
-                    self.activeDate.name="1";
+                    self.activeDate.name="01";
 
                 }else if(self.activeElement==1){
                     if(self.sliderBlockNums<self.monthLists.length-self.activeMonth.index){
@@ -376,7 +376,7 @@
                     //重新设置激活月
                     self.activeMonth.name=self.monthLists[self.activeMonth.index];
                     //默认设置第一天
-                    self.activeDate.name="1";
+                    self.activeDate.name="01";
                 }else if(self.activeElement==2){
                     if(self.sliderBlockNums<self.dateLists.length-self.activeDate.index){
                         self.activeDate.index+=self.sliderBlockNums;
@@ -420,9 +420,9 @@
                     //重新设置激活年份
                     self.activeYear.name=self.yearLists[self.activeYear.index];
                     //设置默认月份为第一个月和第一天
-                    self.activeMonth.name="1";
+                    self.activeMonth.name="01";
                     self.activeMonth.index=0;
-                    self.activeDate.name="1";
+                    self.activeDate.name="01";
 
                 }else if(self.activeElement==1){
                     if(self.sliderBlockNums<self.activeMonth.index){
@@ -434,7 +434,7 @@
                     //重新设置激活月
                     self.activeMonth.name=self.monthLists[self.activeMonth.index];
                     //默认设置第一天
-                    self.activeDate.name="1";
+                    self.activeDate.name="01";
                 }else if(self.activeElement==2){
                     if(self.sliderBlockNums<self.activeDate.index){
                         self.activeDate.index-=self.sliderBlockNums;
