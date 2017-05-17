@@ -1,6 +1,6 @@
 <template >
     <transition :name="transitionType" >
-        <div class="shade-panel" v-if="isShowSelector" v-on:click.self="undoEvent">
+        <div class="shade-panel" v-if="isShowSelector" v-on:click.self="undoEvent"  v-bind:style="{zIndex:shadeZIndex||10}">
             <div class="date-select-lists" >
                 <!--header-->
                 <div class="select-list area-header">
