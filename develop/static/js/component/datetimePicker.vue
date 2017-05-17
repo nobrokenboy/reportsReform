@@ -205,11 +205,11 @@
                self.initDateObj.initSecond=tempArr[5];
            }else{
                self.initDateObj.initYear=self.curYear;
-               self.initDateObj.initMonth=self.curMonth;
-               self.initDateObj.initDate=self.curDate;
-               self.initDateObj.initHour=self.curHour;
-               self.initDateObj.initMinute=self.curMinute;
-               self.initDateObj.initSecond=self.curSecond;
+               self.initDateObj.initMonth=self.curMonth>9?self.curMonth:"0"+self.curMonth;
+               self.initDateObj.initDate=self.curDate>9?self.curDate:"0"+self.curDate;
+               self.initDateObj.initHour=self.curHour>9?self.curHour:"0"+self.curHour;
+               self.initDateObj.initMinute=self.curMinute>9?self.curMinute:"0"+self.curMinute;
+               self.initDateObj.initSecond=self.curSecond>9?self.curSecond:"0"+self.curSecond;
            }
             console.log(self.initDateObj);
 
